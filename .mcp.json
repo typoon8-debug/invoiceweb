@@ -20,9 +20,9 @@
     },
     "shrimp-task-manager": {
       "command": "node",
-      "args": ["/Users/TomJay/workspace/mcp-shrimp-task-manager/dist/index.js"],
+      "args": ["../mcp-shrimp-task-manager/dist/index.js"],
       "env": {
-        "DATA_DIR": "/Users/TomJay/workspace/invoice-web/shrimp_data",
+        "DATA_DIR": "./shrimp_data",
         "TEMPLATES_USE": "en",
         "ENABLE_GUI": "true"
       }

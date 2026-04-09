@@ -9,212 +9,259 @@
       "dependencies": [],
       "createdAt": "2026-04-07T05:26:30.492Z",
       "updatedAt": "2026-04-07T05:31:44.416Z",
-      "relatedFiles": [
-        {
-          "path": "src/app/login/page.tsx",
-          "type": "TO_MODIFY",
-          "description": "(auth) 그룹으로 이동 — 삭제 후 재생성"
-        },
-        {
-          "path": "src/app/signup/page.tsx",
-          "type": "TO_MODIFY",
-          "description": "(auth) 그룹으로 이동 — 삭제 후 재생성"
-        },
-        {
-          "path": "src/app/(auth)/login/page.tsx",
-          "type": "CREATE",
-          "description": "기존 login/page.tsx 내용 동일"
-        },
-        {
-          "path": "src/app/(auth)/signup/page.tsx",
-          "type": "CREATE",
-          "description": "기존 signup/page.tsx 내용 동일"
-        },
-        {
-          "path": "src/app/(protected)/layout.tsx",
-          "type": "CREATE",
-          "description": "보호 라우트 그룹 레이아웃 플레이스홀더"
-        },
-        {
-          "path": "src/app/(protected)/dashboard/page.tsx",
-          "type": "CREATE",
-          "description": "대시보드 페이지 플레이스홀더"
-        },
-        {
-          "path": "src/app/(protected)/invoices/new/page.tsx",
-          "type": "CREATE",
-          "description": "견적서 생성 페이지 플레이스홀더"
-        },
-        {
-          "path": "src/app/(protected)/invoices/[id]/preview/page.tsx",
-          "type": "CREATE",
-          "description": "견적서 미리보기 페이지 플레이스홀더"
-        },
-        {
-          "path": "src/app/view/[token]/page.tsx",
-          "type": "CREATE",
-          "description": "공개 견적서 뷰어 플레이스홀더"
-        },
-        {
-          "path": "src/app/expired/page.tsx",
-          "type": "CREATE",
-          "description": "링크 만료 안내 페이지 플레이스홀더"
-        },
-        {
-          "path": "src/app/api/notion/callback/route.ts",
-          "type": "CREATE",
-          "description": "노션 OAuth 콜백 Route 플레이스홀더"
-        },
-        {
-          "path": "src/app/api/pdf/[token]/route.ts",
-          "type": "CREATE",
-          "description": "PDF 생성 Route 플레이스홀더"
-        },
-        {
-          "path": "src/middleware.ts",
-          "type": "CREATE",
-          "description": "Next.js 미들웨어 기본 골격 (matcher만)"
-        },
-        {
-          "path": ".env.local.example",
-          "type": "CREATE",
-          "description": "환경변수 명세"
-        },
-        {
-          "path": "shrimp-rules.md",
-          "type": "REFERENCE",
-          "description": "프로젝트 컨벤션 및 디렉토리 규칙 참조"
-        }
-      ],
-      "implementationGuide": "1. 기존 파일 이동:\n   - src/app/login/page.tsx 내용을 src/app/(auth)/login/page.tsx 로 재생성\n   - src/app/signup/page.tsx 내용을 src/app/(auth)/signup/page.tsx 로 재생성\n   - 원본 파일 삭제\n   - (auth) 그룹은 별도 layout.tsx 불필요 (각 page가 자체 레이아웃 포함)\n\n2. (protected) 그룹 생성:\n   - src/app/(protected)/layout.tsx: 플레이스홀더 (Task 003에서 완성)\n   - src/app/(protected)/dashboard/page.tsx: 최소 껍데기\n   - src/app/(protected)/invoices/new/page.tsx: 최소 껍데기\n   - src/app/(protected)/invoices/[id]/preview/page.tsx: 최소 껍데기\n\n3. 공개 페이지 생성:\n   - src/app/view/[token]/page.tsx: 최소 껍데기\n   - src/app/expired/page.tsx: 최소 껍데기\n\n4. API Route 플레이스홀더:\n   - src/app/api/notion/callback/route.ts: export async function GET(request: Request)\n   - src/app/api/pdf/[token]/route.ts: export async function GET(request: Request, { params })\n\n5. 빈 디렉토리 생성 (.gitkeep 사용):\n   - src/components/common/.gitkeep\n   - src/components/invoice/.gitkeep\n   - src/lib/supabase/.gitkeep\n   - src/lib/notion/.gitkeep\n   - src/lib/repositories/.gitkeep\n   - src/lib/services/.gitkeep\n   - src/lib/actions/.gitkeep\n   - src/lib/schemas/.gitkeep\n   - src/types/.gitkeep\n\n6. middleware.ts 골격:\n   // matcher만 정의, 실제 로직은 Task 003\n   export const config = { matcher: ['/dashboard/:path*', '/invoices/:path*'] }\n   export function middleware(request: NextRequest) { return NextResponse.next() }\n\n7. .env.local.example 작성:\n   NEXT_PUBLIC_SUPABASE_URL=\n   NEXT_PUBLIC_SUPABASE_ANON_KEY=\n   SUPABASE_SERVICE_ROLE_KEY=\n   NOTION_CLIENT_ID=\n   NOTION_CLIENT_SECRET=\n   NOTION_REDIRECT_URI=\n   NEXT_PUBLIC_APP_URL=",
-      "verificationCriteria": "1. npm run dev 실행 후 /login, /signup, /dashboard, /view/test-token, /expired 모두 200 응답 (플레이스홀더 텍스트 표시)\n2. 기존 LoginForm, SignupForm 임포트 경로(@/components/login-form, @/components/signup-form) 정상 동작\n3. src/app/(protected)/, src/app/(auth)/ 디렉토리 구조 존재\n4. npm run check-all 통과",
-      "analysisResult": "Phase 1: 애플리케이션 골격 구축. 목표: 전체 프로젝트의 디렉토리 구조, 라우팅, 공통 타입, Supabase 인프라를 확립하여 이후 모든 Phase의 기반을 만든다. 기술 스택: Next.js 15.5.3 App Router, TypeScript 5, @supabase/ssr, Zod v4. 컨벤션: 세미콜론 없음, 작은따옴표, 들여쓰기 2칸, any 타입 금지, @/ 경로 사용, 환경변수는 반드시 env.ts 경유.",
-      "summary": "수락 기준 전항목 충족. (auth)/login, (auth)/signup 이동 완료 — 기존 LoginForm/SignupForm 임포트 경로 유지. (protected) 그룹에 dashboard/invoices/new/invoices/[id]/preview 플레이스홀더 생성. view/[token], expired 공개 페이지 생성. API Route 2개 플레이스홀더 생성. 공통 디렉토리 9개 .gitkeep으로 생성. middleware.ts 기본 골격(matcher 전체 경로 포함) 작성. .env.local.example 작성. npm run check-all 통과(타입오류 0, 포맷 이슈 0). 마이너 감점: ESLint warning 2건(_request 미사용 파라미터) — 플레이스홀더 특성상 의도적이므로 실제 구현 시 해소될 예정.",
+      "relatedFiles": [],
+      "summary": "수락 기준 전항목 충족. (auth)/login, (auth)/signup 이동 완료. (protected) 그룹에 dashboard/invoices/new/invoices/[id]/preview 플레이스홀더 생성. view/[token], expired 공개 페이지 생성. API Route 2개 플레이스홀더 생성. 공통 디렉토리 9개 .gitkeep으로 생성. middleware.ts 기본 골격 작성. .env.local.example 작성. npm run check-all 통과.",
       "completedAt": "2026-04-07T05:31:44.413Z"
     },
     {
       "id": "508f29c6-13db-43c7-b7a4-f4cb85b05e8d",
       "name": "Task 002: 공통 타입 시스템 및 Zod 스키마 정의",
-      "description": "전체 애플리케이션에서 사용할 TypeScript 타입, Zod 스키마, Supabase DB 마이그레이션 SQL을 정의한다. 타입을 먼저 확립함으로써 이후 모든 서비스/컴포넌트가 동일한 데이터 계약을 기반으로 작업한다.\n\n수락 기준:\n- src/types/domain.ts: User, Invoice, InvoiceItem, ShareLinkStatus, InvoiceWithItems, InvoiceWithStatus 타입 존재\n- src/types/api.ts: ApiResult<T>, PaginatedResult<T> 타입 존재\n- src/types/forms.ts: 폼 값 타입 존재\n- src/lib/schemas/auth.schema.ts: loginSchema, signupSchema 존재\n- src/lib/schemas/invoice.schema.ts: invoiceCreateSchema, invoiceItemSchema 존재\n- supabase/migrations/001_create_tables.sql: 3개 테이블 DDL 존재\n- supabase/migrations/002_rls_policies.sql: RLS 정책 SQL 존재\n- src/lib/env.ts: Supabase/Notion 환경변수 추가됨\n- npm run check-all 통과",
-      "notes": "forms.ts의 타입은 schemas에서 z.infer로 추출하는 방식도 가능하지만, 명시적 interface 선언이 IDE 지원 및 가독성에 유리. env.ts에서 Supabase/Notion 변수는 .env.local이 없는 환경(CI 등)에서 빌드 실패 방지를 위해 optional() 또는 조건부 처리 고려.",
+      "description": "전체 애플리케이션에서 사용할 TypeScript 타입, Zod 스키마, Supabase DB 마이그레이션 SQL을 정의한다.\n\n수락 기준:\n- src/types/domain.ts: User, Invoice, InvoiceItem, ShareLinkStatus, InvoiceWithItems, InvoiceWithStatus 타입 존재\n- src/types/api.ts: ApiResult<T>, PaginatedResult<T> 타입 존재\n- src/types/forms.ts: 폼 값 타입 존재\n- src/lib/schemas/auth.schema.ts: loginSchema, signupSchema 존재\n- src/lib/schemas/invoice.schema.ts: invoiceCreateSchema, invoiceItemSchema 존재\n- supabase/migrations/001_create_tables.sql: 3개 테이블 DDL 존재\n- supabase/migrations/002_rls_policies.sql: RLS 정책 SQL 존재\n- npm run check-all 통과",
+      "notes": "",
       "status": "completed",
-      "dependencies": [
-        {
-          "taskId": "b076be84-ba89-4470-8b8b-831cf526b396"
-        }
-      ],
+      "dependencies": [{ "taskId": "b076be84-ba89-4470-8b8b-831cf526b396" }],
       "createdAt": "2026-04-07T05:26:30.492Z",
       "updatedAt": "2026-04-07T05:38:30.458Z",
-      "relatedFiles": [
-        {
-          "path": "src/types/domain.ts",
-          "type": "CREATE",
-          "description": "도메인 핵심 타입 (User, Invoice, InvoiceItem 등)"
-        },
-        {
-          "path": "src/types/api.ts",
-          "type": "CREATE",
-          "description": "API 공통 응답 타입 (ApiResult<T>, PaginatedResult<T>)"
-        },
-        {
-          "path": "src/types/forms.ts",
-          "type": "CREATE",
-          "description": "폼 입력값 타입"
-        },
-        {
-          "path": "src/lib/schemas/auth.schema.ts",
-          "type": "CREATE",
-          "description": "Zod 인증 스키마 (loginSchema, signupSchema)"
-        },
-        {
-          "path": "src/lib/schemas/invoice.schema.ts",
-          "type": "CREATE",
-          "description": "Zod 견적서 스키마 (invoiceCreateSchema, invoiceItemSchema)"
-        },
-        {
-          "path": "supabase/migrations/001_create_tables.sql",
-          "type": "CREATE",
-          "description": "DB 테이블 DDL (users, invoices, invoice_items)"
-        },
-        {
-          "path": "supabase/migrations/002_rls_policies.sql",
-          "type": "CREATE",
-          "description": "RLS 정책 SQL"
-        },
-        {
-          "path": "src/lib/env.ts",
-          "type": "TO_MODIFY",
-          "description": "Supabase/Notion 환경변수 추가",
-          "lineStart": 1,
-          "lineEnd": 17
-        },
-        {
-          "path": "shrimp-rules.md",
-          "type": "REFERENCE",
-          "description": "환경변수 규칙 및 Zod 스키마 위치 참조"
-        }
-      ],
-      "implementationGuide": "1. src/types/domain.ts:\n   interface User { id: string; email: string; name: string; notionAccessToken: string | null; createdAt: string }\n   interface Invoice { id: string; userId: string; clientName: string; clientContact: string; validUntil: string; totalAmount: number; shareToken: string | null; tokenExpiresAt: string | null; createdAt: string }\n   interface InvoiceItem { id: string; invoiceId: string; name: string; quantity: number; unitPrice: number; notionPageId: string | null }\n   type ShareLinkStatus = 'active' | 'expired' | 'invalid'\n   type InvoiceWithItems = Invoice & { items: InvoiceItem[] }\n   type InvoiceWithStatus = Invoice & { linkStatus: ShareLinkStatus }\n\n2. src/types/api.ts:\n   type ApiResult<T> = { success: true; data: T } | { success: false; error: string; code?: string }\n   type PaginatedResult<T> = ApiResult<{ items: T[]; total: number; page: number }>\n\n3. src/types/forms.ts:\n   Zod infer를 사용하는 대신 명시적 타입 정의:\n   interface LoginFormValues { email: string; password: string }\n   interface SignupFormValues { email: string; password: string; confirmPassword: string; name: string }\n   interface InvoiceItemFormValues { name: string; quantity: number; unitPrice: number; notionPageId?: string }\n   interface InvoiceCreateFormValues { clientName: string; clientContact: string; validUntil: string; items: InvoiceItemFormValues[] }\n\n4. src/lib/schemas/auth.schema.ts (Zod v4):\n   export const loginSchema = z.object({ email: z.string().email('올바른 이메일을 입력하세요'), password: z.string().min(8, '비밀번호는 8자 이상') })\n   export const signupSchema = z.object({ email: z.string().email(), name: z.string().min(1), password: z.string().min(8), confirmPassword: z.string() }).refine(data => data.password === data.confirmPassword, { message: '비밀번호가 일치하지 않습니다', path: ['confirmPassword'] })\n   export type LoginSchema = z.infer<typeof loginSchema>\n   export type SignupSchema = z.infer<typeof signupSchema>\n\n5. src/lib/schemas/invoice.schema.ts:\n   export const invoiceItemSchema = z.object({ name: z.string().min(1), quantity: z.number().positive(), unitPrice: z.number().nonnegative(), notionPageId: z.string().optional() })\n   export const invoiceCreateSchema = z.object({ clientName: z.string().min(1), clientContact: z.string().min(1), validUntil: z.string(), items: z.array(invoiceItemSchema).min(1, '최소 1개 항목 필요') })\n\n6. supabase/migrations/001_create_tables.sql:\n   CREATE TABLE users (id UUID PRIMARY KEY DEFAULT gen_random_uuid(), email TEXT UNIQUE NOT NULL, name TEXT NOT NULL, notion_access_token TEXT, created_at TIMESTAMPTZ DEFAULT NOW())\n   CREATE TABLE invoices (id UUID PRIMARY KEY DEFAULT gen_random_uuid(), user_id UUID REFERENCES users(id) ON DELETE CASCADE, client_name TEXT NOT NULL, client_contact TEXT NOT NULL, valid_until DATE NOT NULL, total_amount NUMERIC(15,2) NOT NULL DEFAULT 0, share_token TEXT UNIQUE, token_expires_at TIMESTAMPTZ, created_at TIMESTAMPTZ DEFAULT NOW())\n   CREATE TABLE invoice_items (id UUID PRIMARY KEY DEFAULT gen_random_uuid(), invoice_id UUID REFERENCES invoices(id) ON DELETE CASCADE, name TEXT NOT NULL, quantity NUMERIC(10,2) NOT NULL, unit_price NUMERIC(15,2) NOT NULL, notion_page_id TEXT, created_at TIMESTAMPTZ DEFAULT NOW())\n\n7. supabase/migrations/002_rls_policies.sql:\n   ALTER TABLE invoices ENABLE ROW LEVEL SECURITY\n   CREATE POLICY owner_all ON invoices FOR ALL USING (auth.uid() = user_id)\n   CREATE POLICY public_read_by_token ON invoices FOR SELECT USING (share_token IS NOT NULL AND token_expires_at > NOW())\n   ALTER TABLE invoice_items ENABLE ROW LEVEL SECURITY\n   CREATE POLICY owner_all ON invoice_items FOR ALL USING (invoice_id IN (SELECT id FROM invoices WHERE user_id = auth.uid()))\n   CREATE POLICY public_read_by_invoice ON invoice_items FOR SELECT USING (invoice_id IN (SELECT id FROM invoices WHERE share_token IS NOT NULL AND token_expires_at > NOW()))\n\n8. src/lib/env.ts 업데이트 (기존 필드 유지 + 추가):\n   NEXT_PUBLIC_SUPABASE_URL: z.string().url()\n   NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1)\n   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1)\n   NOTION_CLIENT_ID: z.string().min(1)\n   NOTION_CLIENT_SECRET: z.string().min(1)\n   NOTION_REDIRECT_URI: z.string().url()",
-      "verificationCriteria": "1. TypeScript 컴파일 오류 없음 (npm run typecheck 또는 tsc --noEmit)\n2. src/lib/schemas/auth.schema.ts import 후 loginSchema.parse({ email: 'a@b.com', password: '12345678' }) 성공\n3. src/types/api.ts의 ApiResult<string> 타입이 올바른 discriminated union으로 동작\n4. npm run check-all 통과\n5. supabase/migrations/ 파일 2개 존재 및 유효한 SQL 문법",
-      "analysisResult": "Phase 1: 애플리케이션 골격 구축. 목표: 전체 프로젝트의 디렉토리 구조, 라우팅, 공통 타입, Supabase 인프라를 확립하여 이후 모든 Phase의 기반을 만든다. 기술 스택: Next.js 15.5.3 App Router, TypeScript 5, @supabase/ssr, Zod v4. 컨벤션: 세미콜론 없음, 작은따옴표, 들여쓰기 2칸, any 타입 금지, @/ 경로 사용, 환경변수는 반드시 env.ts 경유.",
-      "summary": "수락 기준 전항목 충족. src/types/domain.ts(User/Invoice/InvoiceItem/ShareLinkStatus/InvoiceWithItems/InvoiceWithStatus), src/types/api.ts(ApiResult&lt;T&gt;/PaginatedResult&lt;T&gt;), src/types/forms.ts(4개 폼 인터페이스) 생성. src/lib/schemas/auth.schema.ts(loginSchema/signupSchema + refine 비밀번호 확인), src/lib/schemas/invoice.schema.ts(invoiceItemSchema/invoiceCreateSchema) 생성. supabase/migrations/001_create_tables.sql(users/invoices/invoice_items + 인덱스 3개), 002_rls_policies.sql(3개 테이블 RLS — 소유자 전체/토큰 기반 공개 읽기) 생성. env.ts 기존 필드 유지하며 Supabase/Notion 6개 변수 optional로 추가(CI 빌드 안전). npm run check-all 통과(타입 오류 0, 포맷 이슈 0).",
+      "relatedFiles": [],
+      "summary": "수락 기준 전항목 충족. src/types/domain.ts, src/types/api.ts, src/types/forms.ts 생성. auth.schema.ts, invoice.schema.ts 생성. supabase/migrations/001_create_tables.sql, 002_rls_policies.sql 생성. env.ts Supabase/Notion 6개 변수 optional로 추가. npm run check-all 통과.",
       "completedAt": "2026-04-07T05:38:30.454Z"
     },
     {
       "id": "24381ba3-924a-419f-968b-9fe0f601f69f",
       "name": "Task 003: Supabase 클라이언트 및 인증 미들웨어 구축",
-      "description": "Supabase 패키지를 설치하고, 브라우저/서버/미들웨어용 클라이언트 3종을 구현한다. Next.js 미들웨어에 실제 인증 로직을 추가하고, (protected) 레이아웃에서 미인증 사용자를 리디렉션한다. 이 단계 이후 모든 서비스는 이 인프라를 통해 Supabase에 접근한다.\n\n수락 기준:\n- @supabase/supabase-js, @supabase/ssr 패키지 설치됨\n- src/lib/supabase/client.ts, server.ts, middleware.ts 3개 파일 존재\n- src/middleware.ts: 보호 라우트 비인증 접근 시 /login 리디렉션\n- src/app/(protected)/layout.tsx: 미인증 시 redirect('/login')\n- /dashboard 직접 접근 시 /login으로 리디렉션 동작 확인",
-      "notes": "@supabase/ssr의 createServerClient는 쿠키 처리가 필수. Next.js 15의 cookies()는 async이므로 await 필요. env.ts에서 환경변수를 반드시 경유해야 함(process.env 직접 접근 금지). 실제 Supabase 프로젝트 URL/Key가 없으면 빌드는 되지만 런타임 인증은 동작하지 않음 — .env.local 설정 필요.",
+      "description": "Supabase 패키지를 설치하고, 브라우저/서버/미들웨어용 클라이언트 3종을 구현한다. Next.js 미들웨어에 실제 인증 로직을 추가하고, (protected) 레이아웃에서 미인증 사용자를 리디렉션한다.\n\n수락 기준:\n- @supabase/supabase-js, @supabase/ssr 패키지 설치됨\n- src/lib/supabase/client.ts, server.ts, middleware.ts 3개 파일 존재\n- src/middleware.ts: 보호 라우트 비인증 접근 시 /login 리디렉션\n- src/app/(protected)/layout.tsx: 미인증 시 redirect('/login')\n- /dashboard 직접 접근 시 /login으로 리디렉션 동작 확인",
+      "notes": "",
       "status": "completed",
-      "dependencies": [
-        {
-          "taskId": "508f29c6-13db-43c7-b7a4-f4cb85b05e8d"
-        }
-      ],
+      "dependencies": [{ "taskId": "508f29c6-13db-43c7-b7a4-f4cb85b05e8d" }],
       "createdAt": "2026-04-07T05:26:30.492Z",
       "updatedAt": "2026-04-07T05:54:05.033Z",
+      "relatedFiles": [],
+      "summary": "수락 기준 전항목 충족. @supabase/supabase-js, @supabase/ssr 설치. client.ts, server.ts, middleware.ts 3종 생성. middleware.ts 인증 로직 완성. (protected)/layout.tsx 서버 사이드 이중 인증 체크 완성. npm run check-all 통과.",
+      "completedAt": "2026-04-07T05:54:05.025Z"
+    },
+    {
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "name": "Task 004: 공통 UI 컴포넌트 라이브러리 및 유틸리티",
+      "description": "프로젝트 전반에서 재사용되는 피드백 컴포넌트(6종), 견적서 도메인 컴포넌트(4종), NotionConnectionCard, 공통 유틸리티 함수(4종)를 구현한다.\n\n수락 기준:\n- src/lib/utils/index.ts: 기존 cn() 함수 이동 완료, @/lib/utils import 정상 동작\n- src/lib/utils/format.ts: formatCurrency, formatDate 함수 존재\n- src/lib/utils/token.ts: isTokenExpired, getLinkStatus 함수 존재\n- src/components/common/: LoadingSpinner, ErrorMessage, EmptyState, ConfirmDialog, CopyButton, StatusBadge, NotionConnectionCard 파일 존재\n- src/components/invoice/: InvoiceHeader, InvoiceTable, InvoiceSummary, InvoiceDocument 파일 존재\n- shadcn table 컴포넌트 설치됨 (src/components/ui/table.tsx)\n- npm run check-all 통과",
+      "notes": "src/lib/utils.ts 삭제 후 @/lib/utils를 import하는 모든 기존 파일이 src/lib/utils/index.ts를 자동으로 참조하는지 TypeScript 컴파일로 확인 필요. copy-button.tsx는 'use client' 지시어 필수. invoice-document.tsx는 Server Component로 유지 (읽기 전용이므로).",
+      "status": "pending",
+      "dependencies": [{ "taskId": "24381ba3-924a-419f-968b-9fe0f601f69f" }],
+      "createdAt": "2026-04-09T00:00:00.000Z",
+      "updatedAt": "2026-04-09T00:00:00.000Z",
       "relatedFiles": [
         {
-          "path": "src/lib/supabase/client.ts",
-          "type": "CREATE",
-          "description": "브라우저용 Supabase 클라이언트"
-        },
-        {
-          "path": "src/lib/supabase/server.ts",
-          "type": "CREATE",
-          "description": "서버 컴포넌트/액션용 Supabase 클라이언트 (쿠키 기반)"
-        },
-        {
-          "path": "src/lib/supabase/middleware.ts",
-          "type": "CREATE",
-          "description": "미들웨어용 Supabase 클라이언트"
-        },
-        {
-          "path": "src/middleware.ts",
+          "path": "src/lib/utils.ts",
           "type": "TO_MODIFY",
-          "description": "인증 로직 완성 (보호 라우트 리디렉션)"
+          "description": "src/lib/utils/index.ts로 이동 후 삭제"
+        },
+        {
+          "path": "src/lib/utils/index.ts",
+          "type": "CREATE",
+          "description": "cn() 함수 (기존 utils.ts 내용)"
+        },
+        {
+          "path": "src/lib/utils/format.ts",
+          "type": "CREATE",
+          "description": "formatCurrency, formatDate 유틸리티"
+        },
+        {
+          "path": "src/lib/utils/token.ts",
+          "type": "CREATE",
+          "description": "isTokenExpired, getLinkStatus 유틸리티"
+        },
+        {
+          "path": "src/components/common/loading-spinner.tsx",
+          "type": "CREATE",
+          "description": "로딩 스피너 컴포넌트"
+        },
+        {
+          "path": "src/components/common/error-message.tsx",
+          "type": "CREATE",
+          "description": "에러 메시지 컴포넌트"
+        },
+        {
+          "path": "src/components/common/empty-state.tsx",
+          "type": "CREATE",
+          "description": "빈 상태 안내 컴포넌트"
+        },
+        {
+          "path": "src/components/common/confirm-dialog.tsx",
+          "type": "CREATE",
+          "description": "확인/취소 모달"
+        },
+        {
+          "path": "src/components/common/copy-button.tsx",
+          "type": "CREATE",
+          "description": "클립보드 복사 버튼"
+        },
+        {
+          "path": "src/components/common/status-badge.tsx",
+          "type": "CREATE",
+          "description": "공유 링크 상태 뱃지"
+        },
+        {
+          "path": "src/components/common/notion-connection-card.tsx",
+          "type": "CREATE",
+          "description": "노션 연결 상태 카드"
+        },
+        {
+          "path": "src/components/invoice/invoice-header.tsx",
+          "type": "CREATE",
+          "description": "견적서 헤더 섹션"
+        },
+        {
+          "path": "src/components/invoice/invoice-table.tsx",
+          "type": "CREATE",
+          "description": "품목 테이블 (읽기전용/편집 모드)"
+        },
+        {
+          "path": "src/components/invoice/invoice-summary.tsx",
+          "type": "CREATE",
+          "description": "합계 요약 컴포넌트"
+        },
+        {
+          "path": "src/components/invoice/invoice-document.tsx",
+          "type": "CREATE",
+          "description": "완성 견적서 레이아웃"
+        },
+        {
+          "path": "src/types/domain.ts",
+          "type": "DEPENDENCY",
+          "description": "Invoice, InvoiceItem, ShareLinkStatus 타입 참조"
+        },
+        {
+          "path": "src/components/ui/badge.tsx",
+          "type": "DEPENDENCY",
+          "description": "StatusBadge 래퍼용"
+        },
+        {
+          "path": "src/components/ui/dialog.tsx",
+          "type": "DEPENDENCY",
+          "description": "ConfirmDialog 래퍼용"
+        }
+      ],
+      "implementationGuide": "1. utils 이동: src/lib/utils.ts → src/lib/utils/index.ts로 내용 복사 후 원본 삭제\n2. src/lib/utils/format.ts: formatCurrency(amount: number) — Intl.NumberFormat('ko-KR') + '원', formatDate(dateStr: string) — Intl.DateTimeFormat('ko-KR', {year,month,day})\n3. src/lib/utils/token.ts: isTokenExpired(tokenExpiresAt: string|null) — null이면 true, Date 비교. getLinkStatus(tokenExpiresAt: string|null) — null→invalid, 만료→expired, 유효→active\n4. npx shadcn@latest add table 실행\n5. 피드백 컴포넌트: loading-spinner(cva sm/md/lg), error-message(AlertCircle+message), empty-state(icon+title+description+children), confirm-dialog(Dialog 래퍼), copy-button(navigator.clipboard+CheckIcon/CopyIcon 전환), status-badge(ShareLinkStatus→Badge 색상 맵)\n6. 도메인 컴포넌트: invoice-header(clientName/validUntil), invoice-table(InvoiceItem[]+readOnly), invoice-summary(totalAmount+부가세 10%), invoice-document(3개 조합)\n7. notion-connection-card: isConnected+onConnect+onDisconnect props",
+      "verificationCriteria": "1. npx shadcn@latest add table 실행 후 src/components/ui/table.tsx 존재\n2. src/lib/utils.ts 삭제 후 기존 @/lib/utils import 오류 없음\n3. formatCurrency(1000000) === '1,000,000원'\n4. getLinkStatus(null) === 'invalid'\n5. 모든 컴포넌트 파일 생성 확인\n6. npm run check-all 통과"
+    },
+    {
+      "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "name": "Task 005: 레이아웃 시스템 구축",
+      "description": "세 가지 레이아웃 컨텍스트(인증 후/인증 전/공개)를 컴포넌트로 분리하고, App Router 그룹 layout.tsx에 적용한다.\n\n수락 기준:\n- src/components/layout/authenticated-layout.tsx: 헤더(로고+네비+로그아웃)+콘텐츠 영역\n- src/components/layout/auth-layout.tsx: 중앙 정렬 카드 레이아웃\n- src/components/layout/public-layout.tsx: 최소 헤더 + 인쇄 최적화 CSS\n- src/app/(protected)/layout.tsx: AuthenticatedLayout 적용\n- src/app/(auth)/layout.tsx: AuthLayout 적용 (신규 생성)\n- npm run check-all 통과",
+      "notes": "로그아웃 버튼은 Phase 3(Task 008)에서 signOutAction 연결 예정 — Phase 2에서는 UI만 구현. PublicLayout은 view/[token]/page.tsx와 expired/page.tsx에서 직접 import하여 사용.",
+      "status": "pending",
+      "dependencies": [{ "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890" }],
+      "createdAt": "2026-04-09T00:00:00.000Z",
+      "updatedAt": "2026-04-09T00:00:00.000Z",
+      "relatedFiles": [
+        {
+          "path": "src/components/layout/authenticated-layout.tsx",
+          "type": "CREATE",
+          "description": "인증된 사용자 레이아웃"
+        },
+        {
+          "path": "src/components/layout/auth-layout.tsx",
+          "type": "CREATE",
+          "description": "인증 페이지 레이아웃"
+        },
+        {
+          "path": "src/components/layout/public-layout.tsx",
+          "type": "CREATE",
+          "description": "공개 뷰어 레이아웃 (인쇄 최적화)"
         },
         {
           "path": "src/app/(protected)/layout.tsx",
           "type": "TO_MODIFY",
-          "description": "서버 사이드 인증 체크 + 미인증 시 리디렉션"
+          "description": "AuthenticatedLayout 적용",
+          "lineStart": 1,
+          "lineEnd": 26
         },
         {
-          "path": "src/lib/env.ts",
+          "path": "src/app/(auth)/layout.tsx",
+          "type": "CREATE",
+          "description": "AuthLayout 적용 (신규)"
+        },
+        {
+          "path": "src/app/view/[token]/page.tsx",
+          "type": "REFERENCE",
+          "description": "PublicLayout 적용 예정 페이지"
+        },
+        {
+          "path": "src/app/expired/page.tsx",
+          "type": "REFERENCE",
+          "description": "PublicLayout 적용 예정 페이지"
+        },
+        {
+          "path": "src/lib/supabase/server.ts",
           "type": "DEPENDENCY",
-          "description": "Supabase URL/Key 환경변수 참조"
-        },
-        {
-          "path": "package.json",
-          "type": "TO_MODIFY",
-          "description": "@supabase/supabase-js, @supabase/ssr 패키지 추가"
+          "description": "(protected)/layout.tsx에서 user 조회"
         }
       ],
-      "implementationGuide": "1. 패키지 설치:\n   npm install @supabase/supabase-js @supabase/ssr\n\n2. src/lib/supabase/client.ts (브라우저용):\n   import { createBrowserClient } from '@supabase/ssr'\n   export function createClient() {\n     return createBrowserClient(env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_ANON_KEY)\n   }\n\n3. src/lib/supabase/server.ts (Server Component/Action용):\n   import { createServerClient } from '@supabase/ssr'\n   import { cookies } from 'next/headers'\n   export async function createClient() {\n     const cookieStore = await cookies()\n     return createServerClient(url, anonKey, { cookies: { getAll: () => cookieStore.getAll(), setAll: (cs) => cs.forEach(({ name, value, options }) => cookieStore.set(name, value, options)) } })\n   }\n\n4. src/lib/supabase/middleware.ts (미들웨어용):\n   import { createServerClient } from '@supabase/ssr'\n   export function createClient(request: NextRequest, response: NextResponse) {\n     return createServerClient(url, anonKey, { cookies: { getAll: () => request.cookies.getAll(), setAll: (cs) => cs.forEach(({ name, value, options }) => { request.cookies.set(name, value); response.cookies.set(name, value, options) }) } })\n   }\n\n5. src/middleware.ts 완성:\n   import { createClient } from '@/lib/supabase/middleware'\n   export async function middleware(request: NextRequest) {\n     const response = NextResponse.next({ request })\n     const supabase = createClient(request, response)\n     const { data: { user } } = await supabase.auth.getUser()\n     const { pathname } = request.nextUrl\n     const isProtected = pathname.startsWith('/dashboard') || pathname.startsWith('/invoices')\n     const isAuthPage = pathname.startsWith('/login') || pathname.startsWith('/signup')\n     if (isProtected && !user) return NextResponse.redirect(new URL('/login', request.url))\n     if (isAuthPage && user) return NextResponse.redirect(new URL('/dashboard', request.url))\n     return response\n   }\n   export const config = { matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'] }\n\n6. src/app/(protected)/layout.tsx 완성:\n   import { redirect } from 'next/navigation'\n   import { createClient } from '@/lib/supabase/server'\n   export default async function ProtectedLayout({ children }: { children: React.ReactNode }) {\n     const supabase = await createClient()\n     const { data: { user } } = await supabase.auth.getUser()\n     if (!user) redirect('/login')\n     return <>{children}</>\n   }",
-      "verificationCriteria": "1. npm install 후 @supabase/supabase-js, @supabase/ssr package.json dependencies에 존재\n2. npm run build 성공 (타입 오류 없음)\n3. .env.local에 실제 Supabase 값 설정 후 npm run dev 실행:\n   - /dashboard 직접 URL 접근 시 /login 리디렉션 확인\n   - /login 접근 후 로그인 성공 시 /dashboard 이동 구조 준비됨\n4. npm run check-all 통과\n5. src/lib/supabase/ 아래 파일 3개 모두 존재",
-      "analysisResult": "Phase 1: 애플리케이션 골격 구축. 목표: 전체 프로젝트의 디렉토리 구조, 라우팅, 공통 타입, Supabase 인프라를 확립하여 이후 모든 Phase의 기반을 만든다. 기술 스택: Next.js 15.5.3 App Router, TypeScript 5, @supabase/ssr, Zod v4. 컨벤션: 세미콜론 없음, 작은따옴표, 들여쓰기 2칸, any 타입 금지, @/ 경로 사용, 환경변수는 반드시 env.ts 경유.",
-      "summary": "수락 기준 전항목 충족. @supabase/supabase-js@^2.101.1, @supabase/ssr@^0.10.0 package.json에 존재. src/lib/supabase/client.ts(createBrowserClient 브라우저용), server.ts(createServerClient + Next.js 15 async cookies()), middleware.ts(request/response 쿠키 직접 조작) 3종 생성. src/middleware.ts에 getUser() 기반 인증 로직 완성 — 보호 라우트 비인증 시 /login 리디렉션, 인증 사용자의 /login·/signup 접근 시 /dashboard 리디렉션. src/app/(protected)/layout.tsx 서버 사이드 이중 인증 체크 완성. env.ts 경유 환경변수 사용(process.env 직접 접근 없음). npm run check-all 통과(타입 오류 0, 포맷 이슈 0).",
-      "completedAt": "2026-04-07T05:54:05.025Z"
+      "implementationGuide": "1. authenticated-layout.tsx: Server Component, props {children, userEmail?}. 헤더(sticky+border-b+backdrop-blur): 로고텍스트+'노션 견적서' + /dashboard, /invoices/new 네비 링크 + 로그아웃 버튼(UI만). main에 children 렌더링.\n2. auth-layout.tsx: Server Component, props {children}. min-h-screen flex flex-col items-center justify-center bg-muted/40.\n3. public-layout.tsx: Server Component, props {children}. 최소 헤더(서비스명만, print:hidden) + main(print:p-0).\n4. (protected)/layout.tsx 수정: 기존 인증 체크 유지, user.email을 AuthenticatedLayout에 전달.\n5. (auth)/layout.tsx 신규 생성: AuthLayout으로 children 래핑.",
+      "verificationCriteria": "1. /dashboard 접근 시 헤더(로고, 네비, 로그아웃 버튼) 렌더링\n2. /login 접근 시 중앙 정렬 레이아웃 적용\n3. 기존 LoginForm, SignupForm 동작 유지\n4. npm run build 성공\n5. npm run check-all 통과"
+    },
+    {
+      "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+      "name": "Task 006: 공통 폼 시스템 구현",
+      "description": "React Hook Form + Zod 기반 폼 패턴을 표준화하는 공통 컴포넌트와 커스텀 훅, 견적서 인라인 편집 컴포넌트를 구현한다.\n\n수락 기준:\n- src/components/common/form/form-field-wrapper.tsx: label+children+error 래퍼\n- src/components/common/form/submit-button.tsx: isPending 내장 제출 버튼\n- src/components/common/form/form-error-alert.tsx: 서버 에러 Alert\n- src/lib/hooks/use-form-action.ts: Server Action과 RHF 연결 훅\n- src/components/invoice/editable-cell.tsx: 인라인 편집 셀\n- src/components/invoice/editable-table.tsx: 편집 가능 테이블\n- npm run check-all 통과",
+      "notes": "useFormAction의 ApiResult 타입은 src/types/api.ts에서 import. startTransition은 React 19에서 async 지원. use-form-action.ts에서 FieldValues import는 'react-hook-form'에서.",
+      "status": "pending",
+      "dependencies": [{ "taskId": "b2c3d4e5-f6a7-8901-bcde-f12345678901" }],
+      "createdAt": "2026-04-09T00:00:00.000Z",
+      "updatedAt": "2026-04-09T00:00:00.000Z",
+      "relatedFiles": [
+        {
+          "path": "src/components/common/form/form-field-wrapper.tsx",
+          "type": "CREATE",
+          "description": "폼 필드 래퍼 컴포넌트"
+        },
+        {
+          "path": "src/components/common/form/submit-button.tsx",
+          "type": "CREATE",
+          "description": "제출 버튼 (isPending 내장)"
+        },
+        {
+          "path": "src/components/common/form/form-error-alert.tsx",
+          "type": "CREATE",
+          "description": "서버 에러 Alert"
+        },
+        {
+          "path": "src/lib/hooks/use-form-action.ts",
+          "type": "CREATE",
+          "description": "Server Action + RHF 연결 커스텀 훅"
+        },
+        {
+          "path": "src/components/invoice/editable-cell.tsx",
+          "type": "CREATE",
+          "description": "인라인 편집 셀"
+        },
+        {
+          "path": "src/components/invoice/editable-table.tsx",
+          "type": "CREATE",
+          "description": "편집 가능 테이블"
+        },
+        {
+          "path": "src/types/api.ts",
+          "type": "DEPENDENCY",
+          "description": "ApiResult<T> 타입 참조"
+        },
+        {
+          "path": "src/components/common/loading-spinner.tsx",
+          "type": "DEPENDENCY",
+          "description": "SubmitButton 로딩 상태용"
+        },
+        {
+          "path": "src/components/ui/alert.tsx",
+          "type": "DEPENDENCY",
+          "description": "FormErrorAlert 래퍼용"
+        },
+        {
+          "path": "src/components/ui/button.tsx",
+          "type": "DEPENDENCY",
+          "description": "SubmitButton 래퍼용"
+        }
+      ],
+      "implementationGuide": "1. form-field-wrapper.tsx ('use client'): props {label, error?, required?, children, className?}. label+children+error(text-destructive) 레이아웃.\n2. submit-button.tsx ('use client'): props {isPending?, children, className?} & ButtonProps. isPending 시 LoadingSpinner(sm)+'처리중...' + disabled.\n3. form-error-alert.tsx: props {message?, className?}. message 없으면 null. shadcn Alert(destructive)+AlertCircle+message.\n4. use-form-action.ts: useFormAction<TFieldValues, TData>({action, form, onSuccess?}) → {execute, isPending}. startTransition+async, 성공→onSuccess, 실패→form.setError('root', {message:error}).\n5. editable-cell.tsx ('use client'): props {value, onChange, min?, className?}. useState로 편집값, onBlur에서 onChange 호출. input[type=number].\n6. editable-table.tsx ('use client'): props {items: InvoiceItem[], onItemsChange}. shadcn Table, EditableCell로 quantity/unitPrice 편집, formatCurrency로 소계 표시.",
+      "verificationCriteria": "1. useFormAction 훅이 ApiResult success/failure 모두 처리\n2. SubmitButton isPending=true 시 disabled + 스피너\n3. FormErrorAlert message=null 시 렌더링 없음\n4. EditableCell onBlur에서 onChange 콜백 호출\n5. EditableTable 변경 시 onItemsChange 호출 및 소계 재계산\n6. npm run check-all 통과"
     }
   ]
 }
