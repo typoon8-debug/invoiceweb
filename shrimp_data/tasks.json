@@ -517,6 +517,302 @@
       "analysisResult": "Phase 3 공통 API 레이어 구현. Repository → Service → Server Action 3계층 구조. DB 스키마는 snake_case, TypeScript 타입은 camelCase이므로 Repository에서 매핑 필수. @notionhq/client와 nanoid 패키지 설치 필요. 기존 src/lib/utils/token.ts에 generateToken 등 확장. Supabase createClient()는 각 메서드 내 await 호출(요청별 클라이언트).",
       "summary": "nanoid 설치 완료. token.ts에 generateToken(nanoid 21자)/calculateExpiry(기본 30일)/validateToken 추가. InvoiceService 5개 메서드(createInvoice/generateShareLink/getInvoiceList/getInvoiceById/getInvoiceByToken) 구현. invoice.actions.ts 4개 Server Action(createInvoiceAction/generateShareLinkAction/getInvoiceListAction/getInvoiceByIdAction) 구현. 유효기간 과거 날짜 검증, 총금액 자동 계산, any 타입 미사용. npm run check-all 통과.",
       "completedAt": "2026-04-09T04:45:46.004Z"
+    },
+    {
+      "id": "7dfc0494-d3f6-4766-a3a7-3748879b976c",
+      "name": "Task 011: 인증 페이지 기능 완성 (F010)",
+      "description": "로그인/회원가입 페이지에 실제 Server Action을 연결한다. useFormAction 훅 + signInAction/signUpAction + 공통 폼 컴포넌트(FormFieldWrapper, SubmitButton, FormErrorAlert)를 조립하여 완전히 동작하는 인증 UI를 구현한다.",
+      "notes": "signInAction 성공 결과는 { userId } — router.push로 리디렉션. signOutAction은 이 Task에서 구현하지 않음(Task 012에서 처리). auth.schema.ts에 passwordConfirm 필드 추가 필요.",
+      "status": "completed",
+      "dependencies": [],
+      "createdAt": "2026-04-09T05:01:04.148Z",
+      "updatedAt": "2026-04-09T05:04:37.779Z",
+      "relatedFiles": [
+        {
+          "path": "src/app/(auth)/login/page.tsx",
+          "type": "TO_MODIFY",
+          "description": "로그인 페이지 — 실제 signInAction 연결"
+        },
+        {
+          "path": "src/app/(auth)/signup/page.tsx",
+          "type": "TO_MODIFY",
+          "description": "회원가입 페이지 — signUpAction 연결"
+        },
+        {
+          "path": "src/lib/actions/auth.actions.ts",
+          "type": "REFERENCE",
+          "description": "signInAction, signUpAction, signOutAction"
+        },
+        {
+          "path": "src/lib/schemas/auth.schema.ts",
+          "type": "TO_MODIFY",
+          "description": "passwordConfirm 필드 및 refine 추가"
+        },
+        {
+          "path": "src/lib/hooks/useFormAction.ts",
+          "type": "REFERENCE",
+          "description": "Server Action 연결 커스텀 훅"
+        },
+        {
+          "path": "src/components/common/form/FormFieldWrapper.tsx",
+          "type": "REFERENCE",
+          "description": "폼 필드 래퍼 컴포넌트"
+        },
+        {
+          "path": "src/components/common/form/SubmitButton.tsx",
+          "type": "REFERENCE",
+          "description": "제출 버튼 (isPending 내장)"
+        },
+        {
+          "path": "src/components/common/form/FormErrorAlert.tsx",
+          "type": "REFERENCE",
+          "description": "서버 에러 표시 컴포넌트"
+        }
+      ],
+      "implementationGuide": "1. 로그인 페이지 (src/app/(auth)/login/page.tsx) 수정:\n   - 기존 더미 폼 교체\n   - useFormAction 훅 + signInAction 연결\n   - 성공 시 router.push('/dashboard')\n   - FormFieldWrapper(email, password), SubmitButton, FormErrorAlert 사용\n   - 회원가입 링크 추가\n\n2. 회원가입 페이지 (src/app/(auth)/signup/page.tsx) 수정:\n   - useFormAction 훅 + signUpAction 연결\n   - 필드: name, email, password, passwordConfirm\n   - Zod refine으로 비밀번호 확인 일치 검사 (auth.schema.ts에 추가)\n   - 성공 시 router.push('/dashboard')\n   - 로그인 링크 추가\n\n3. pseudocode:\n```\n// login/page.tsx (Client Component)\n'use client'\nconst { execute, isPending, error } = useFormAction(signInAction)\nconst form = useForm({ resolver: zodResolver(loginSchema) })\nconst onSubmit = (data) => execute(data)\nreturn <form onSubmit={handleSubmit(onSubmit)}>\n  <FormErrorAlert message={error} />\n  <FormFieldWrapper name='email' label='이메일' />\n  <FormFieldWrapper name='password' label='비밀번호' type='password' />\n  <SubmitButton isPending={isPending}>로그인</SubmitButton>\n</form>\n```",
+      "verificationCriteria": "1. 올바른 이메일/비밀번호로 로그인 → /dashboard 리디렉션\n2. 잘못된 자격증명 → FormErrorAlert에 에러 메시지 표시\n3. 회원가입 폼 제출 → /dashboard 리디렉션\n4. 비밀번호 불일치 → 폼 유효성 에러 표시\n5. 제출 중 SubmitButton 로딩 상태 표시\n6. npm run build 통과",
+      "analysisResult": "Phase 4 개별 기능 구현: Phase 1~3에서 구축한 공통 기반(Repository → Service → Server Action 3계층, 공통 UI 컴포넌트, 레이아웃 시스템, 폼 시스템)을 조립하여 5개 페이지의 실제 기능을 완성한다. 각 Task는 새 코드를 최소화하고 공통 기반을 최대한 활용한다. 'use client' / 'use server' 경계를 명확히 분리하고, Server Action은 ApiResult<T> 패턴으로 반환한다.",
+      "summary": "login-form.tsx와 signup-form.tsx를 useFormAction + signInAction/signUpAction + 공통 폼 컴포넌트(FormFieldWrapper, SubmitButton, FormErrorAlert)로 완전히 교체. Zod zodResolver 연결, 성공 시 router.push('/dashboard'), 실패 시 errors.root.message로 FormErrorAlert 표시. signupSchema의 confirmPassword refine 검증 활용. npm run build 통과.",
+      "completedAt": "2026-04-09T05:04:37.775Z"
+    },
+    {
+      "id": "208ff2d8-ea4a-40aa-b7fd-80ff902efe4b",
+      "name": "Task 012: 대시보드 기능 완성 (F006, F011)",
+      "description": "대시보드 페이지에 견적서 목록, 노션 연결 상태 카드, 로그아웃 버튼을 완성한다. 서버 컴포넌트로 데이터를 로드하고, 클라이언트 컴포넌트(LogoutButton)로 인터랙션을 처리한다.",
+      "notes": "AuthenticatedLayout에 이미 로그아웃 버튼 자리가 있음(TODO 주석). NotionConnectionCard는 Phase 2에서 UI만 구현됨 — 여기서 실제 액션과 연결. 공유 URL 형식: `${env.NEXT_PUBLIC_APP_URL}/view/${invoice.shareToken}` (shareToken이 null이면 버튼 비활성화).",
+      "status": "completed",
+      "dependencies": [
+        {
+          "taskId": "7dfc0494-d3f6-4766-a3a7-3748879b976c"
+        }
+      ],
+      "createdAt": "2026-04-09T05:01:04.149Z",
+      "updatedAt": "2026-04-09T05:07:51.583Z",
+      "relatedFiles": [
+        {
+          "path": "src/app/(protected)/dashboard/page.tsx",
+          "type": "TO_MODIFY",
+          "description": "대시보드 메인 페이지"
+        },
+        {
+          "path": "src/components/common/LogoutButton.tsx",
+          "type": "CREATE",
+          "description": "로그아웃 클라이언트 컴포넌트"
+        },
+        {
+          "path": "src/components/invoice/InvoiceListItem.tsx",
+          "type": "CREATE",
+          "description": "견적서 목록 아이템 컴포넌트"
+        },
+        {
+          "path": "src/components/layout/AuthenticatedLayout/index.tsx",
+          "type": "TO_MODIFY",
+          "description": "LogoutButton 교체"
+        },
+        {
+          "path": "src/components/common/NotionConnectionCard.tsx",
+          "type": "TO_MODIFY",
+          "description": "connectNotionAction/disconnectNotionAction 연결"
+        },
+        {
+          "path": "src/lib/actions/invoice.actions.ts",
+          "type": "REFERENCE",
+          "description": "getInvoiceListAction"
+        },
+        {
+          "path": "src/lib/actions/notion.actions.ts",
+          "type": "REFERENCE",
+          "description": "connectNotionAction, disconnectNotionAction"
+        },
+        {
+          "path": "src/components/common/StatusBadge.tsx",
+          "type": "REFERENCE",
+          "description": "공유 링크 상태 뱃지"
+        },
+        {
+          "path": "src/components/common/CopyButton.tsx",
+          "type": "REFERENCE",
+          "description": "클립보드 복사 버튼"
+        },
+        {
+          "path": "src/components/common/EmptyState.tsx",
+          "type": "REFERENCE",
+          "description": "빈 목록 안내"
+        }
+      ],
+      "implementationGuide": "1. LogoutButton 클라이언트 컴포넌트 생성 (src/components/common/LogoutButton.tsx):\n   - 'use client'\n   - signOutAction 호출 후 router.push('/login')\n   - AuthenticatedLayout의 TODO 주석 교체\n\n2. 대시보드 페이지 (src/app/(protected)/dashboard/page.tsx):\n   - 서버 컴포넌트\n   - getInvoiceListAction() 호출 → 견적서 목록\n   - getCurrentUser() 호출 → 노션 연결 상태 확인\n   - Suspense + LoadingSpinner 적용\n   - 견적서 목록: StatusBadge(linkStatus), CopyButton(공유 URL), 생성일\n   - EmptyState: 견적서 없을 때 '새 견적서 만들기' CTA\n   - NotionConnectionCard: 연결/해제 버튼 (connectNotionAction, disconnectNotionAction)\n\n3. pseudocode:\n```\n// dashboard/page.tsx (Server Component)\nconst user = await AuthService.getCurrentUser()\nconst result = await getInvoiceListAction()\nconst invoices = result.success ? result.data : []\nreturn (\n  <div>\n    <NotionConnectionCard isConnected={!!user?.notionAccessToken} />\n    <section>\n      {invoices.length === 0 \n        ? <EmptyState title='견적서 없음' cta='새 견적서 만들기' href='/invoices/new' />\n        : invoices.map(inv => <InvoiceListItem key={inv.id} invoice={inv} />)\n      }\n    </section>\n  </div>\n)\n```\n\n4. InvoiceListItem 컴포넌트 (src/components/invoice/InvoiceListItem.tsx):\n   - 견적서 제목(clientName), 생성일(formatDate), StatusBadge\n   - CopyButton: 공유 URL 복사 (tokenExpiresAt이 null이면 비활성)\n   - '미리보기' 링크 → /invoices/[id]/preview",
+      "verificationCriteria": "1. 대시보드 페이지 진입 시 견적서 목록 렌더링\n2. 견적서 없을 때 EmptyState 표시 + '새 견적서 만들기' 링크\n3. StatusBadge가 active/expired/invalid 올바르게 표시\n4. CopyButton 클릭 시 공유 URL 클립보드 복사\n5. 로그아웃 버튼 클릭 → /login 리디렉션\n6. 노션 연결/해제 버튼 동작\n7. npm run build 통과",
+      "analysisResult": "Phase 4 개별 기능 구현: Phase 1~3에서 구축한 공통 기반(Repository → Service → Server Action 3계층, 공통 UI 컴포넌트, 레이아웃 시스템, 폼 시스템)을 조립하여 5개 페이지의 실제 기능을 완성한다. 각 Task는 새 코드를 최소화하고 공통 기반을 최대한 활용한다. 'use client' / 'use server' 경계를 명확히 분리하고, Server Action은 ApiResult<T> 패턴으로 반환한다.",
+      "summary": "LogoutButton 클라이언트 컴포넌트 생성(signOutAction+router.push), AuthenticatedLayout에 LogoutButton 교체. NotionConnectionCard에 'use client' 추가 + 비동기 Server Action props 수신 + router.refresh(). InvoiceListItem 생성(StatusBadge, CopyButton, formatCurrency, formatDate). Dashboard 서버 컴포넌트에서 AuthService.getCurrentUser()와 getInvoiceListAction()을 Promise.all로 병렬 호출. npm run build 통과.",
+      "completedAt": "2026-04-09T05:07:51.580Z"
+    },
+    {
+      "id": "d82f393f-999c-4592-a028-70e2c94ac29a",
+      "name": "Task 013: 견적서 생성 기능 완성 (F001, F002)",
+      "description": "견적서 생성 페이지를 완성한다. 노션 DB 드롭다운 선택 → 항목 자동 로드 → EditableTable 인라인 수정 → 고객 정보 입력 → createInvoiceAction 제출 → 미리보기 페이지 이동 흐름을 구현한다.",
+      "notes": "Notion에서 로드한 InvoiceItem의 id는 빈 문자열('')일 수 있음 — React key로 index를 fallback으로 사용. invoiceCreateSchema의 items 배열 필드가 notionPageId를 optional로 처리하는지 확인. 노션 미연결 상태일 때 ConfirmDialog로 '노션 연결' 페이지 이동 안내.",
+      "status": "completed",
+      "dependencies": [
+        {
+          "taskId": "208ff2d8-ea4a-40aa-b7fd-80ff902efe4b"
+        }
+      ],
+      "createdAt": "2026-04-09T05:01:04.149Z",
+      "updatedAt": "2026-04-09T05:10:38.177Z",
+      "relatedFiles": [
+        {
+          "path": "src/app/(protected)/invoices/new/page.tsx",
+          "type": "TO_MODIFY",
+          "description": "견적서 생성 페이지"
+        },
+        {
+          "path": "src/components/invoice/InvoiceCreateForm.tsx",
+          "type": "CREATE",
+          "description": "견적서 생성 폼 클라이언트 컴포넌트"
+        },
+        {
+          "path": "src/components/invoice/EditableTable.tsx",
+          "type": "REFERENCE",
+          "description": "인라인 편집 가능 테이블"
+        },
+        {
+          "path": "src/lib/actions/invoice.actions.ts",
+          "type": "REFERENCE",
+          "description": "createInvoiceAction"
+        },
+        {
+          "path": "src/lib/actions/notion.actions.ts",
+          "type": "REFERENCE",
+          "description": "getNotionDatabasesAction, getNotionDatabaseItemsAction"
+        },
+        {
+          "path": "src/lib/schemas/invoice.schema.ts",
+          "type": "REFERENCE",
+          "description": "invoiceCreateSchema — items 배열 포함"
+        },
+        {
+          "path": "src/lib/utils/format.ts",
+          "type": "REFERENCE",
+          "description": "formatCurrency, formatDate"
+        },
+        {
+          "path": "src/components/common/ConfirmDialog.tsx",
+          "type": "REFERENCE",
+          "description": "노션 미연결 안내 모달"
+        }
+      ],
+      "implementationGuide": "1. 페이지 구조 (src/app/(protected)/invoices/new/page.tsx):\n   - 서버 컴포넌트: 노션 연결 여부 확인, 미연결 시 ConfirmDialog 렌더링\n   - InvoiceCreateForm 클라이언트 컴포넌트를 children으로 렌더링\n\n2. InvoiceCreateForm (src/components/invoice/InvoiceCreateForm.tsx):\n   - 'use client'\n   - 상태: selectedDbId, items(InvoiceItem[]), totalAmount\n   - DB 드롭다운: getNotionDatabasesAction() 로드 → select onChange → getNotionDatabaseItemsAction(dbId)\n   - Notion 항목 로드 시 item.id가 ''인 경우 → index 기반 임시 key 사용\n   - EditableTable: 수량/단가 편집 → items 상태 업데이트 → totalAmount 재계산\n   - 고객 정보 폼: React Hook Form + invoiceCreateSchema\n   - 합계 금액 실시간 표시 (formatCurrency)\n   - '미리보기' 버튼 → createInvoiceAction(formData) 제출\n   - 성공 시 router.push('/invoices/' + id + '/preview')\n\n3. pseudocode:\n```\nconst [items, setItems] = useState<InvoiceItem[]>([])\nconst total = items.reduce((s, i) => s + i.quantity * i.unitPrice, 0)\n\nasync function handleDbSelect(dbId: string) {\n  const res = await getNotionDatabaseItemsAction(dbId)\n  if (res.success) setItems(res.data)\n}\n\nasync function onSubmit(formValues) {\n  const payload = { ...formValues, items: items.map(i => ({ name: i.name, quantity: i.quantity, unitPrice: i.unitPrice, notionPageId: i.notionPageId ?? null })) }\n  const res = await createInvoiceAction(payload)\n  if (res.success) router.push('/invoices/' + res.data.id + '/preview')\n}\n```\n\n4. EditableTable (이미 구현된 경우 재사용, 없으면 간단히 구현):\n   - 각 행: name(읽기전용), quantity(number input), unitPrice(number input)\n   - key: item.id || String(index)",
+      "verificationCriteria": "1. 노션 DB 드롭다운 선택 → 항목 자동 로드\n2. 수량/단가 인라인 수정 → 합계 실시간 업데이트\n3. 고객사명/담당자/유효기간 입력 후 제출 → /invoices/[id]/preview 이동\n4. 필수 필드 누락 시 폼 유효성 에러\n5. 유효기간 과거 날짜 → 에러 메시지\n6. 노션 미연결 시 ConfirmDialog 표시\n7. npm run build 통과",
+      "analysisResult": "Phase 4 개별 기능 구현: Phase 1~3에서 구축한 공통 기반(Repository → Service → Server Action 3계층, 공통 UI 컴포넌트, 레이아웃 시스템, 폼 시스템)을 조립하여 5개 페이지의 실제 기능을 완성한다. 각 Task는 새 코드를 최소화하고 공통 기반을 최대한 활용한다. 'use client' / 'use server' 경계를 명확히 분리하고, Server Action은 ApiResult<T> 패턴으로 반환한다.",
+      "summary": "InvoiceCreateForm 클라이언트 컴포넌트 생성: 노션 DB 드롭다운(Select), EditableTable 인라인 편집, React Hook Form + invoiceCreateSchema, createInvoiceAction 제출 후 /preview 이동. Notion 항목 id 빈 문자열 문제 해결(index 기반 임시 id). 미연결 시 ConfirmDialog로 대시보드 안내. 페이지(서버 컴포넌트)에서 isNotionConnected prop 전달. npm run build 통과.",
+      "completedAt": "2026-04-09T05:10:38.174Z"
+    },
+    {
+      "id": "154b23e9-790a-4483-a9d9-b8e1a411c488",
+      "name": "Task 014: 견적서 미리보기 및 공유 링크 기능 완성 (F002, F003)",
+      "description": "견적서 미리보기 페이지를 완성한다. 서버 컴포넌트로 견적서 데이터를 로드하고, InvoiceDocument 컴포넌트로 렌더링하며, ShareLinkButton 클라이언트 컴포넌트로 공유 링크 생성 및 복사 기능을 제공한다.",
+      "notes": "InvoiceDocument는 Phase 2에서 이미 구현됨 — 읽기 전용 모드로 재사용. 공유 링크가 이미 생성된 견적서라면 기존 토큰을 초기값으로 표시. generateShareLinkAction은 토큰을 재생성(갱신)하므로 재클릭 시 새 토큰 발급됨.",
+      "status": "completed",
+      "dependencies": [
+        {
+          "taskId": "d82f393f-999c-4592-a028-70e2c94ac29a"
+        }
+      ],
+      "createdAt": "2026-04-09T05:01:04.149Z",
+      "updatedAt": "2026-04-09T05:11:42.778Z",
+      "relatedFiles": [
+        {
+          "path": "src/app/(protected)/invoices/[id]/preview/page.tsx",
+          "type": "TO_MODIFY",
+          "description": "견적서 미리보기 페이지"
+        },
+        {
+          "path": "src/components/invoice/ShareLinkButton.tsx",
+          "type": "CREATE",
+          "description": "공유 링크 생성 클라이언트 컴포넌트"
+        },
+        {
+          "path": "src/components/invoice/InvoiceDocument.tsx",
+          "type": "REFERENCE",
+          "description": "견적서 완성 레이아웃 컴포넌트 (읽기 전용)"
+        },
+        {
+          "path": "src/lib/actions/invoice.actions.ts",
+          "type": "REFERENCE",
+          "description": "getInvoiceByIdAction, generateShareLinkAction"
+        },
+        {
+          "path": "src/components/common/CopyButton.tsx",
+          "type": "REFERENCE",
+          "description": "클립보드 복사 버튼"
+        }
+      ],
+      "implementationGuide": "1. 미리보기 페이지 (src/app/(protected)/invoices/[id]/preview/page.tsx):\n   - 서버 컴포넌트\n   - params.id로 getInvoiceByIdAction(id) 호출\n   - 견적서 없으면 notFound() 또는 /dashboard 리디렉션\n   - InvoiceDocument 컴포넌트 (읽기 전용 렌더링)\n   - ShareLinkButton 클라이언트 컴포넌트\n   - '← 이전 단계(수정)' 링크 → /invoices/new (또는 history.back)\n\n2. ShareLinkButton (src/components/invoice/ShareLinkButton.tsx):\n   - 'use client'\n   - 상태: shareUrl(string|null), isPending\n   - '공유 링크 생성' 버튼 → generateShareLinkAction(invoiceId) 호출\n   - 성공 시 shareUrl 상태 업데이트 → 링크 표시 + CopyButton\n   - 이미 shareToken이 있는 경우 초기값으로 설정\n\n3. pseudocode:\n```\n// preview/page.tsx\nconst res = await getInvoiceByIdAction(params.id)\nif (!res.success) redirect('/dashboard')\nreturn (\n  <div>\n    <InvoiceDocument invoice={res.data} />\n    <ShareLinkButton\n      invoiceId={params.id}\n      existingToken={res.data.shareToken}\n    />\n    <Link href='/invoices/new'>← 수정하기</Link>\n  </div>\n)\n\n// ShareLinkButton.tsx\nconst [shareUrl, setShareUrl] = useState(\n  existingToken ? `${appUrl}/view/${existingToken}` : null\n)\nasync function handleGenerate() {\n  const res = await generateShareLinkAction(invoiceId)\n  if (res.success) setShareUrl(res.data)\n}\n```",
+      "verificationCriteria": "1. /invoices/[id]/preview 접근 시 견적서 데이터 렌더링\n2. InvoiceDocument가 InvoiceHeader + InvoiceTable + InvoiceSummary 조합으로 표시\n3. '공유 링크 생성' 클릭 → 토큰 URL 표시 + CopyButton\n4. CopyButton 클릭 → 클립보드 복사 피드백\n5. 존재하지 않는 id → /dashboard 리디렉션\n6. npm run build 통과",
+      "analysisResult": "Phase 4 개별 기능 구현: Phase 1~3에서 구축한 공통 기반(Repository → Service → Server Action 3계층, 공통 UI 컴포넌트, 레이아웃 시스템, 폼 시스템)을 조립하여 5개 페이지의 실제 기능을 완성한다. 각 Task는 새 코드를 최소화하고 공통 기반을 최대한 활용한다. 'use client' / 'use server' 경계를 명확히 분리하고, Server Action은 ApiResult<T> 패턴으로 반환한다.",
+      "summary": "ShareLinkButton 클라이언트 컴포넌트 생성(generateShareLinkAction 호출, existingToken으로 초기값 설정, CopyButton 연결). 미리보기 페이지(서버 컴포넌트)에서 getInvoiceByIdAction으로 데이터 로드, InvoiceDocument(invoice + items 분리 전달), ShareLinkButton 렌더링. 존재하지 않는 id는 /dashboard로 redirect. npm run build 통과.",
+      "completedAt": "2026-04-09T05:11:42.775Z"
+    },
+    {
+      "id": "74af985f-d281-43a6-9a42-a2749f86c0a6",
+      "name": "Task 015: 견적서 뷰어 및 PDF 다운로드 기능 완성 (F004, F005)",
+      "description": "공개 견적서 뷰어 페이지와 링크 만료 안내 페이지를 완성한다. 토큰 기반 공개 접근, InvoiceDocument 렌더링, PDF 다운로드(window.print 기반), 링크 만료 시 /expired 리디렉션을 구현한다.",
+      "notes": "PDF 구현은 window.print() 방식(브라우저 인쇄 → PDF 저장)으로 단순화. Puppeteer/@react-pdf는 MVP 이후 단계. 뷰어 페이지는 비인증 접근이므로 middleware.ts에서 /view/* 경로를 보호 대상에서 제외해야 함(이미 적용되어 있을 것이나 확인 필요).",
+      "status": "completed",
+      "dependencies": [
+        {
+          "taskId": "154b23e9-790a-4483-a9d9-b8e1a411c488"
+        }
+      ],
+      "createdAt": "2026-04-09T05:01:04.149Z",
+      "updatedAt": "2026-04-09T05:13:11.183Z",
+      "relatedFiles": [
+        {
+          "path": "src/app/view/[token]/page.tsx",
+          "type": "TO_MODIFY",
+          "description": "공개 견적서 뷰어 페이지"
+        },
+        {
+          "path": "src/app/expired/page.tsx",
+          "type": "TO_MODIFY",
+          "description": "링크 만료 안내 페이지"
+        },
+        {
+          "path": "src/components/invoice/PrintButton.tsx",
+          "type": "CREATE",
+          "description": "PDF 다운로드(인쇄) 클라이언트 컴포넌트"
+        },
+        {
+          "path": "src/lib/actions/invoice.actions.ts",
+          "type": "TO_MODIFY",
+          "description": "getInvoiceByTokenAction 추가"
+        },
+        {
+          "path": "src/lib/services/invoice.service.ts",
+          "type": "REFERENCE",
+          "description": "getInvoiceByToken — InvoiceByTokenResult 반환"
+        },
+        {
+          "path": "src/components/invoice/InvoiceDocument.tsx",
+          "type": "REFERENCE",
+          "description": "견적서 완성 레이아웃 컴포넌트 (읽기 전용)"
+        },
+        {
+          "path": "src/components/layout/PublicLayout/index.tsx",
+          "type": "REFERENCE",
+          "description": "공개 페이지 레이아웃 (인쇄 CSS 포함)"
+        },
+        {
+          "path": "src/middleware.ts",
+          "type": "REFERENCE",
+          "description": "/view/* 경로 보호 제외 확인"
+        }
+      ],
+      "implementationGuide": "1. 뷰어 페이지 (src/app/view/[token]/page.tsx):\n   - 서버 컴포넌트 (인증 불필요, PublicLayout 사용)\n   - getInvoiceByToken(params.token) 호출 (InvoiceService 직접 사용 또는 Server Action 추가)\n   - status === 'invalid' 또는 result === null → redirect('/expired')\n   - status === 'expired' → redirect('/expired') 또는 만료 안내 인라인\n   - status === 'active' → InvoiceDocument + PrintButton 렌더링\n\n2. PrintButton (src/components/invoice/PrintButton.tsx):\n   - 'use client'\n   - 클릭 시 window.print() 호출\n   - @media print CSS: 버튼 숨김, A4 용지 최적화\n\n3. 만료 안내 페이지 (src/app/expired/page.tsx):\n   - PublicLayout 사용\n   - 만료/무효 안내 메시지 표시\n   - '작성자에게 재요청하세요' 안내 문구\n\n4. getInvoiceByToken Server Action 추가 (src/lib/actions/invoice.actions.ts):\n   - 인증 없이 호출 가능\n   - InvoiceService.getInvoiceByToken(token) 래핑\n   - ApiResult<InvoiceByTokenResult> 반환\n\n5. 인쇄 CSS (src/app/globals.css 또는 PublicLayout):\n```css\n@media print {\n  .no-print { display: none; }\n  body { font-size: 12pt; }\n}\n```\n\n6. pseudocode:\n```\n// view/[token]/page.tsx\nconst result = await getInvoiceByTokenAction(params.token)\nif (!result.success || result.data.status !== 'active') {\n  redirect('/expired')\n}\nreturn (\n  <PublicLayout>\n    <InvoiceDocument invoice={result.data.invoice} />\n    <PrintButton className='no-print' />\n  </PublicLayout>\n)\n```",
+      "verificationCriteria": "1. 유효한 토큰 URL 접속 → 견적서 렌더링 (비인증 상태에서도 접근 가능)\n2. 만료/무효 토큰 → /expired 페이지 표시\n3. 'PDF 다운로드' 버튼 클릭 → 브라우저 인쇄 다이얼로그 열림\n4. /expired 페이지: 만료 안내 + 재요청 문구\n5. @media print 시 버튼 숨김\n6. npm run build 통과",
+      "analysisResult": "Phase 4 개별 기능 구현: Phase 1~3에서 구축한 공통 기반(Repository → Service → Server Action 3계층, 공통 UI 컴포넌트, 레이아웃 시스템, 폼 시스템)을 조립하여 5개 페이지의 실제 기능을 완성한다. 각 Task는 새 코드를 최소화하고 공통 기반을 최대한 활용한다. 'use client' / 'use server' 경계를 명확히 분리하고, Server Action은 ApiResult<T> 패턴으로 반환한다.",
+      "summary": "PrintButton 클라이언트 컴포넌트(window.print(), print:hidden CSS), getInvoiceByTokenAction Server Action 추가(인증 불필요). 뷰어 페이지(서버 컴포넌트): InvoiceService.getInvoiceByToken 직접 호출, status가 active가 아니면 /expired로 redirect, PublicLayout + InvoiceDocument + PrintButton 렌더링. 만료 안내 페이지: PublicLayout + 만료 메시지 + 재요청 안내. middleware.ts에서 /view/*는 이미 보호 라우트 제외됨. npm run build 통과.",
+      "completedAt": "2026-04-09T05:13:11.180Z"
     }
   ]
 }
