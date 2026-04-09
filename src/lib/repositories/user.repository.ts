@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import type { User } from '@/types/domain'
 
 /** DB에서 반환되는 snake_case 행 타입 */
@@ -36,9 +37,9 @@ export const UserRepository = {
     return toUser(data as UserRow)
   },
 
-  /** 노션 액세스 토큰 저장 */
+  /** 노션 액세스 토큰 저장 (RLS 우회: 서버 전용 신뢰 작업) */
   async updateNotionToken(userId: string, token: string): Promise<void> {
-    const supabase = await createClient()
+    const supabase = createAdminClient()
     const { error } = await supabase
       .from('users')
       .update({ notion_access_token: token })
@@ -47,9 +48,9 @@ export const UserRepository = {
     if (error) throw new Error(`노션 토큰 저장 실패: ${error.message}`)
   },
 
-  /** 노션 액세스 토큰 삭제 (연결 해제) */
+  /** 노션 액세스 토큰 삭제 (RLS 우회: 서버 전용 신뢰 작업) */
   async clearNotionToken(userId: string): Promise<void> {
-    const supabase = await createClient()
+    const supabase = createAdminClient()
     const { error } = await supabase
       .from('users')
       .update({ notion_access_token: null })

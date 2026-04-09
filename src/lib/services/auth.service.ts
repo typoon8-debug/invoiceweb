@@ -1,6 +1,7 @@
 import type { Session } from '@supabase/supabase-js'
 
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { UserRepository } from '@/lib/repositories/user.repository'
 import type { User } from '@/types/domain'
 
@@ -19,7 +20,10 @@ export const AuthService = {
       throw new Error(authError?.message ?? '회원가입에 실패했습니다')
     }
 
-    const { error: insertError } = await supabase
+    // 이메일 인증 대기 중에는 세션이 없어 auth.uid()가 null → RLS 위반 발생
+    // 서비스 롤 클라이언트로 RLS를 우회하여 안전하게 프로필 저장
+    const adminSupabase = createAdminClient()
+    const { error: insertError } = await adminSupabase
       .from('users')
       .insert({ id: authData.user.id, email, name })
 

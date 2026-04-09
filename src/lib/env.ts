@@ -16,6 +16,8 @@ const envSchema = z.object({
   NOTION_CLIENT_ID: z.string().min(1).optional(),
   NOTION_CLIENT_SECRET: z.string().min(1).optional(),
   NOTION_REDIRECT_URI: z.string().url().optional(),
+  // Notion Internal Integration (OAuth 미설정 시 개발 환경용 폴백)
+  NOTION_API_KEY: z.string().min(1).optional(),
 })
 
 export const env = envSchema.parse({
@@ -30,6 +32,7 @@ export const env = envSchema.parse({
   NOTION_CLIENT_ID: process.env.NOTION_CLIENT_ID,
   NOTION_CLIENT_SECRET: process.env.NOTION_CLIENT_SECRET,
   NOTION_REDIRECT_URI: process.env.NOTION_REDIRECT_URI,
+  NOTION_API_KEY: process.env.NOTION_API_KEY,
 })
 
 export type Env = z.infer<typeof envSchema>
