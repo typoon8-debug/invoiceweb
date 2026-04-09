@@ -106,19 +106,19 @@ Phase 6: 최적화 & 배포
 
 ---
 
-### Phase 1: 애플리케이션 골격 구축
+### Phase 1: 애플리케이션 골격 구축 ✅
 
 > **목표**: 전체 프로젝트의 디렉토리 구조, 라우팅, 공통 타입, 환경 설정을 확립한다.
 > 이 단계의 결과물이 이후 모든 Phase의 기반이 된다.
 
 ---
 
-#### Task 001: 디렉토리 구조 및 라우팅 설계 - 우선순위
+#### Task 001: 디렉토리 구조 및 라우팅 설계 ✅ - 완료
 
 > 전체 애플리케이션의 폴더 구조와 7개 페이지 라우트 플레이스홀더를 생성한다.
 > 이후 모든 작업이 이 구조 안에서 이루어진다.
 
-- [ ] 디렉토리 구조 확정 및 생성
+- [x] 디렉토리 구조 확정 및 생성
 
   ```
   src/
@@ -153,21 +153,21 @@ Phase 6: 최적화 & 배포
   └── middleware.ts                 # Next.js 미들웨어
   ```
 
-- [ ] 7개 페이지 `page.tsx` 플레이스홀더 생성 (빈 껍데기 컴포넌트)
-- [ ] Next.js 미들웨어 파일 생성 (`middleware.ts`) - 라우트 보호 구조만 정의
-- [ ] 환경 변수 명세 작성 (`.env.local.example`)
+- [x] 7개 페이지 `page.tsx` 플레이스홀더 생성 (빈 껍데기 컴포넌트)
+- [x] Next.js 미들웨어 파일 생성 (`middleware.ts`) - 라우트 보호 구조만 정의
+- [x] 환경 변수 명세 작성 (`.env.local.example`)
   - Supabase: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
   - Notion: `NOTION_CLIENT_ID`, `NOTION_CLIENT_SECRET`, `NOTION_REDIRECT_URI`
   - App: `NEXT_PUBLIC_APP_URL`
 
 ---
 
-#### Task 002: 공통 타입 시스템 정의
+#### Task 002: 공통 타입 시스템 정의 ✅ - 완료
 
 > 전체 애플리케이션에서 사용할 TypeScript 타입과 Zod 스키마를 한 곳에서 관리한다.
 > 타입을 먼저 정의함으로써 팀 전체가 동일한 데이터 계약을 기반으로 작업한다.
 
-- [ ] 도메인 타입 정의 (`src/types/domain.ts`)
+- [x] 도메인 타입 정의 (`src/types/domain.ts`)
 
   ```typescript
   // 핵심 도메인 모델
@@ -204,7 +204,7 @@ Phase 6: 최적화 & 배포
   type InvoiceWithStatus = Invoice & { linkStatus: ShareLinkStatus }
   ```
 
-- [ ] API 공통 응답 타입 정의 (`src/types/api.ts`)
+- [x] API 공통 응답 타입 정의 (`src/types/api.ts`)
 
   ```typescript
   // 모든 API/Server Action 결과에 사용하는 표준 타입
@@ -218,15 +218,15 @@ Phase 6: 최적화 & 배포
   }>
   ```
 
-- [ ] 폼 입력 타입 정의 (`src/types/forms.ts`)
+- [x] 폼 입력 타입 정의 (`src/types/forms.ts`)
   - `LoginFormValues`, `SignupFormValues`
   - `InvoiceCreateFormValues`, `InvoiceItemFormValues`
 
-- [ ] Zod 스키마 정의 (`src/lib/schemas/`)
+- [x] Zod 스키마 정의 (`src/lib/schemas/`)
   - `auth.schema.ts`: 로그인/회원가입 폼 스키마
   - `invoice.schema.ts`: 견적서 생성 폼 스키마, 공유 링크 스키마
 
-- [ ] Supabase 데이터베이스 스키마 SQL 작성 (`supabase/migrations/`)
+- [x] Supabase 데이터베이스 스키마 SQL 작성 (`supabase/migrations/`)
   - `001_create_tables.sql`: users, invoices, invoice_items 테이블
   - `002_rls_policies.sql`: Row Level Security 정책
     - 작성자 본인 데이터만 접근 가능 (invoices, invoice_items)
@@ -234,24 +234,24 @@ Phase 6: 최적화 & 배포
 
 ---
 
-#### Task 003: 인프라 기반 구축
+#### Task 003: 인프라 기반 구축 ✅ - 완료
 
 > Supabase 연결, 환경 변수, 미들웨어를 실제로 동작하도록 구성한다.
 > 이 단계 이후 모든 서비스는 이 인프라를 통해 데이터에 접근한다.
 
-- [ ] Supabase 프로젝트 생성 및 DB 마이그레이션 실행
-- [ ] Supabase 클라이언트 팩토리 구현 (`src/lib/supabase/`)
+- [x] Supabase 프로젝트 생성 및 DB 마이그레이션 실행
+- [x] Supabase 클라이언트 팩토리 구현 (`src/lib/supabase/`)
   - `client.ts`: 브라우저용 싱글톤 클라이언트
   - `server.ts`: Server Component/Action용 클라이언트 (쿠키 기반)
   - `middleware.ts`: 미들웨어용 클라이언트
-- [ ] Next.js 미들웨어 인증 로직 구현 (`src/middleware.ts`)
+- [x] Next.js 미들웨어 인증 로직 구현 (`src/middleware.ts`)
   - 보호된 라우트 (`/dashboard`, `/invoices/*`) → 비인증 시 `/login` 리디렉션
   - 인증된 사용자가 `/login`, `/signup` 접근 시 `/dashboard` 리디렉션
-- [ ] RLS 정책 적용 및 Supabase 대시보드에서 검증
+- [x] RLS 정책 적용 및 Supabase 대시보드에서 검증
 
 ---
 
-### Phase 2: 공통 UI 컴포넌트 시스템
+### Phase 2: 공통 UI 컴포넌트 시스템 ✅
 
 > **목표**: 모든 페이지에서 재사용할 UI 블록을 먼저 구축한다.
 > 개별 기능 페이지는 이 컴포넌트들을 조립하여 구성한다.
@@ -259,12 +259,12 @@ Phase 6: 최적화 & 배포
 
 ---
 
-#### Task 004: 공통 UI 컴포넌트 라이브러리
+#### Task 004: 공통 UI 컴포넌트 라이브러리 ✅ - 완료
 
 > 프로젝트 전반에서 반복 사용되는 UI 블록을 표준화한다.
 > 각 컴포넌트는 Props 타입이 명확히 정의되어야 하며, 독립적으로 동작해야 한다.
 
-- [ ] 피드백 컴포넌트 (`src/components/common/`)
+- [x] 피드백 컴포넌트 (`src/components/common/`)
   - `LoadingSpinner`: 로딩 상태 표시 (크기 variant: sm/md/lg)
   - `ErrorMessage`: 에러 메시지 표시 (icon + message)
   - `EmptyState`: 빈 목록 안내 (icon + title + description + CTA 슬롯)
@@ -272,16 +272,16 @@ Phase 6: 최적화 & 배포
   - `CopyButton`: 클립보드 복사 버튼 (복사 완료 상태 피드백 포함)
   - `StatusBadge`: 상태 뱃지 (`active` | `expired` | `invalid` → 색상 자동 매핑)
 
-- [ ] 견적서 도메인 컴포넌트 (`src/components/invoice/`)
+- [x] 견적서 도메인 컴포넌트 (`src/components/invoice/`)
   - `InvoiceHeader`: 회사명, 견적일, 유효기간 헤더 섹션
   - `InvoiceTable`: 품목·수량·단가·소계 테이블 (읽기 전용 / 편집 가능 모드)
   - `InvoiceSummary`: 소계·부가세·합계 요약 컴포넌트
   - `InvoiceDocument`: 위 세 컴포넌트를 조합한 완성 견적서 레이아웃 (뷰어·미리보기 공용)
 
-- [ ] 노션 연동 컴포넌트 (`src/components/common/`)
+- [x] 노션 연동 컴포넌트 (`src/components/common/`)
   - `NotionConnectionCard`: 노션 연결 상태 카드 (연결됨/미연결 상태 표시)
 
-- [ ] 공통 유틸리티 함수 (`src/lib/utils/`)
+- [x] 공통 유틸리티 함수 (`src/lib/utils/`)
   - `formatCurrency(amount)`: 한국 원화 포맷 (예: `1,000,000원`)
   - `formatDate(date)`: 날짜 포맷 (예: `2026년 04월 07일`)
   - `isTokenExpired(tokenExpiresAt)`: 토큰 만료 여부 확인
@@ -289,50 +289,50 @@ Phase 6: 최적화 & 배포
 
 ---
 
-#### Task 005: 레이아웃 시스템
+#### Task 005: 레이아웃 시스템 ✅ - 완료
 
 > 세 가지 레이아웃 컨텍스트(인증 후/인증 전/공개)를 명확히 분리한다.
 > 페이지는 레이아웃을 선택하기만 하면 일관된 UI가 자동으로 적용된다.
 
-- [ ] 인증된 사용자 레이아웃 (`src/components/layout/AuthenticatedLayout/`)
+- [x] 인증된 사용자 레이아웃 (`src/components/layout/AuthenticatedLayout/`)
   - 상단 헤더 (로고, 네비게이션, 로그아웃 버튼)
   - 사이드바 또는 탑 네비게이션 (대시보드, 새 견적서)
   - 메인 콘텐츠 영역 (Slot)
   - App Router 그룹 `(protected)/layout.tsx`에 적용
 
-- [ ] 인증 페이지 레이아웃 (`src/components/layout/AuthLayout/`)
+- [x] 인증 페이지 레이아웃 (`src/components/layout/AuthLayout/`)
   - 중앙 정렬 카드 레이아웃 (로그인/회원가입 전용)
   - App Router 그룹 `(auth)/layout.tsx`에 적용
 
-- [ ] 공개 뷰어 레이아웃 (`src/components/layout/PublicLayout/`)
+- [x] 공개 뷰어 레이아웃 (`src/components/layout/PublicLayout/`)
   - 최소화된 헤더 (서비스명만 표시)
   - 견적서 렌더링에 최적화된 콘텐츠 영역
   - 인쇄 최적화 CSS (`@media print` 적용)
 
 ---
 
-#### Task 006: 공통 폼 시스템
+#### Task 006: 공통 폼 시스템 ✅ - 완료
 
 > React Hook Form + Zod 기반의 폼 패턴을 표준화한다.
 > 모든 폼은 이 공통 시스템 위에서 구현되어 일관된 UX와 검증 로직을 제공한다.
 
-- [ ] 폼 공통 컴포넌트 (`src/components/common/form/`)
+- [x] 폼 공통 컴포넌트 (`src/components/common/form/`)
   - `FormFieldWrapper`: label + input + error message를 묶는 래퍼 컴포넌트
   - `SubmitButton`: 로딩 상태(isPending)를 내장한 제출 버튼
   - `FormErrorAlert`: 서버 에러 메시지를 표시하는 Alert 컴포넌트
 
-- [ ] 공통 폼 훅 (`src/lib/hooks/`)
+- [x] 공통 폼 훅 (`src/lib/hooks/`)
   - `useFormAction<T>`: Server Action 결과를 React Hook Form과 연결하는 커스텀 훅
     - 성공 시 콜백 실행, 실패 시 `setError` 자동 처리
     - `isPending` 상태 제공
 
-- [ ] 인라인 편집 컴포넌트
+- [x] 인라인 편집 컴포넌트
   - `EditableCell`: 견적서 생성 페이지의 수량·단가 인라인 편집 셀
   - `EditableTable`: `EditableCell`을 포함한 편집 가능 테이블 (`InvoiceTable` 편집 모드)
 
 ---
 
-### Phase 3: 공통 API 레이어 & 서비스 모듈
+### Phase 3: 공통 API 레이어 & 서비스 모듈 ✅
 
 > **목표**: 데이터 접근과 비즈니스 로직을 추상화하여 개별 기능이 "어떻게 가져오는지"가 아닌 "무엇을 하는지"에 집중할 수 있게 한다.
 > Repository → Service → Server Action의 3계층 구조로 역할을 분리한다.
@@ -349,48 +349,48 @@ Supabase / Notion API
 
 ---
 
-#### Task 007: 데이터 접근 레이어 (Repository 패턴)
+#### Task 007: 데이터 접근 레이어 (Repository 패턴) ✅ - 완료
 
 > DB 쿼리 로직을 Repository로 캡슐화한다.
 > Service와 Action은 DB를 직접 참조하지 않고 Repository를 통해서만 접근한다.
 
-- [ ] `UserRepository` (`src/lib/repositories/user.repository.ts`)
+- [x] `UserRepository` (`src/lib/repositories/user.repository.ts`)
   - `findById(id)`: 사용자 조회
   - `updateNotionToken(userId, token)`: 노션 토큰 저장/삭제
   - `clearNotionToken(userId)`: 노션 연결 해제
 
-- [ ] `InvoiceRepository` (`src/lib/repositories/invoice.repository.ts`)
+- [x] `InvoiceRepository` (`src/lib/repositories/invoice.repository.ts`)
   - `findAllByUserId(userId)`: 사용자의 견적서 목록 조회
   - `findById(id, userId)`: 단일 견적서 조회 (소유권 검증 포함)
   - `findByToken(token)`: 공개 토큰으로 견적서 조회
   - `create(data)`: 견적서 + 항목 트랜잭션 생성
   - `updateShareToken(id, token, expiresAt)`: 공유 토큰 갱신
 
-- [ ] `InvoiceItemRepository` (`src/lib/repositories/invoice-item.repository.ts`)
+- [x] `InvoiceItemRepository` (`src/lib/repositories/invoice-item.repository.ts`)
   - `findByInvoiceId(invoiceId)`: 견적서의 항목 목록 조회
   - `bulkCreate(invoiceId, items)`: 항목 일괄 생성
   - `bulkUpdate(invoiceId, items)`: 항목 일괄 수정
 
 ---
 
-#### Task 008: 인증 서비스 레이어
+#### Task 008: 인증 서비스 레이어 ✅ - 완료
 
 > 인증 관련 비즈니스 로직을 서비스로 캡슐화한다.
 > 모든 인증 기능은 이 서비스를 통해서만 수행된다.
 
-- [ ] `AuthService` (`src/lib/services/auth.service.ts`)
+- [x] `AuthService` (`src/lib/services/auth.service.ts`)
   - `signUp(email, password, name)`: 회원가입 → User 반환
   - `signIn(email, password)`: 로그인 → Session 반환
   - `signOut()`: 로그아웃
   - `getSession()`: 현재 세션 조회
   - `getCurrentUser()`: 현재 인증된 사용자 조회
 
-- [ ] 인증 Server Actions (`src/lib/actions/auth.actions.ts`)
+- [x] 인증 Server Actions (`src/lib/actions/auth.actions.ts`)
   - `signUpAction(formData)`: Zod 검증 → `AuthService.signUp()` 호출 → `ApiResult<User>` 반환
   - `signInAction(formData)`: Zod 검증 → `AuthService.signIn()` 호출 → `ApiResult<Session>` 반환
   - `signOutAction()`: `AuthService.signOut()` 호출 → 로그인 페이지 리디렉션
 
-- [ ] **[구현 후 테스트 필수]** Playwright MCP 테스트
+- [x] **[구현 후 테스트 필수]** Playwright MCP 테스트
 
   ```
   [정상 플로우]
@@ -412,34 +412,34 @@ Supabase / Notion API
 
 ---
 
-#### Task 009: 노션 API 서비스 레이어
+#### Task 009: 노션 API 서비스 레이어 ✅ - 완료
 
 > Notion API 호출을 캡슐화하고 일관된 에러 핸들링을 제공한다.
 > OAuth 플로우와 데이터 조회 로직을 명확히 분리한다.
 
-- [ ] `NotionOAuthService` (`src/lib/services/notion-oauth.service.ts`)
+- [x] `NotionOAuthService` (`src/lib/services/notion-oauth.service.ts`)
   - `getAuthorizationUrl()`: OAuth 인가 URL 생성
   - `exchangeCode(code)`: 인가 코드 → 액세스 토큰 교환
   - `revokeToken(userId)`: 연결 해제
 
-- [ ] `NotionDataService` (`src/lib/services/notion-data.service.ts`)
+- [x] `NotionDataService` (`src/lib/services/notion-data.service.ts`)
   - `getDatabases(accessToken)`: 연결된 DB 목록 조회
   - `getDatabaseItems(accessToken, databaseId)`: DB 항목 조회
   - `mapToInvoiceItems(notionItems)`: Notion 응답 → `InvoiceItem[]` 변환
     - 필수 필드 누락 시 경고 처리 (품목명, 수량, 단가)
 
-- [ ] 노션 관련 Server Actions (`src/lib/actions/notion.actions.ts`)
+- [x] 노션 관련 Server Actions (`src/lib/actions/notion.actions.ts`)
   - `connectNotionAction()`: OAuth 인가 URL 생성 → 리디렉션
   - `disconnectNotionAction()`: `UserRepository.clearNotionToken()` 호출
   - `getNotionDatabasesAction()`: DB 목록 조회 → `ApiResult<NotionDatabase[]>` 반환
   - `getNotionDatabaseItemsAction(databaseId)`: 항목 조회 → `ApiResult<InvoiceItem[]>` 반환
 
-- [ ] 노션 OAuth 콜백 Route 구현 (`src/app/api/notion/callback/route.ts`)
+- [x] 노션 OAuth 콜백 Route 구현 (`src/app/api/notion/callback/route.ts`)
   - 인가 코드 수신 → `NotionOAuthService.exchangeCode()` 호출
   - `UserRepository.updateNotionToken()` 으로 토큰 저장
   - 대시보드 리디렉션
 
-- [ ] **[구현 후 테스트 필수]** Playwright MCP 테스트
+- [x] **[구현 후 테스트 필수]** Playwright MCP 테스트
 
   ```
   [정상 플로우]
@@ -462,30 +462,30 @@ Supabase / Notion API
 
 ---
 
-#### Task 010: 견적서 서비스 레이어 및 공유 토큰 모듈
+#### Task 010: 견적서 서비스 레이어 및 공유 토큰 모듈 ✅ - 완료
 
 > 견적서 생성, 공유 링크 생성, 토큰 검증 비즈니스 로직을 서비스로 캡슐화한다.
 > 토큰 모듈은 단독 유틸리티로 분리하여 독립적으로 테스트 가능하게 한다.
 
-- [ ] 공유 토큰 유틸리티 (`src/lib/utils/token.ts`)
+- [x] 공유 토큰 유틸리티 (`src/lib/utils/token.ts`)
   - `generateToken()`: `nanoid` 기반 고유 토큰 생성
   - `calculateExpiry(days)`: 만료일 계산 (기본 30일)
   - `validateToken(token, expiresAt)`: 유효성 검사 → `ShareLinkStatus` 반환
 
-- [ ] `InvoiceService` (`src/lib/services/invoice.service.ts`)
+- [x] `InvoiceService` (`src/lib/services/invoice.service.ts`)
   - `createInvoice(userId, formData)`: 견적서 + 항목 생성 → `InvoiceWithItems` 반환
   - `generateShareLink(invoiceId, userId)`: 토큰 생성 + DB 저장 → 공유 URL 반환
   - `getInvoiceList(userId)`: 목록 조회 + 링크 상태 계산 → `InvoiceWithStatus[]` 반환
   - `getInvoiceById(invoiceId, userId)`: 단일 조회 (소유권 검증)
   - `getInvoiceByToken(token)`: 토큰 검증 + 견적서 조회 → 유효/만료 분기
 
-- [ ] 견적서 Server Actions (`src/lib/actions/invoice.actions.ts`)
+- [x] 견적서 Server Actions (`src/lib/actions/invoice.actions.ts`)
   - `createInvoiceAction(formData)`: Zod 검증 → `InvoiceService.createInvoice()` → 미리보기 리디렉션
   - `generateShareLinkAction(invoiceId)`: `InvoiceService.generateShareLink()` → `ApiResult<string>` 반환
   - `getInvoiceListAction()`: `InvoiceService.getInvoiceList()` → `ApiResult<InvoiceWithStatus[]>` 반환
   - `getInvoiceByIdAction(invoiceId)`: `InvoiceService.getInvoiceById()` → `ApiResult<InvoiceWithItems>` 반환
 
-- [ ] **[구현 후 테스트 필수]** Playwright MCP 테스트
+- [x] **[구현 후 테스트 필수]** Playwright MCP 테스트
 
   ```
   [정상 플로우]
@@ -732,26 +732,26 @@ Supabase / Notion API
 
 | Phase   | 설명                             | 상태    |
 | ------- | -------------------------------- | ------- |
-| Phase 1 | 애플리케이션 골격 구축           | 대기 중 |
-| Phase 2 | 공통 UI 컴포넌트 시스템          | 대기 중 |
-| Phase 3 | 공통 API 레이어 & 서비스 모듈    | 대기 중 |
-| Phase 4 | 개별 기능 구현                   | 대기 중 |
+| Phase 1 | 애플리케이션 골격 구축           | ✅ 완료 |
+| Phase 2 | 공통 UI 컴포넌트 시스템          | ✅ 완료 |
+| Phase 3 | 공통 API 레이어 & 서비스 모듈    | ✅ 완료 |
+| Phase 4 | 개별 기능 구현                   | 진행 중 |
 | Phase 5 | 통합 E2E 테스트 (Playwright MCP) | 대기 중 |
 | Phase 6 | 최적화 및 배포                   | 대기 중 |
 
 | Task     | 설명                                               | 상태       |
 | -------- | -------------------------------------------------- | ---------- |
-| Task 001 | 디렉토리 구조 및 라우팅 설계                       | - 우선순위 |
-| Task 002 | 공통 타입 시스템 정의                              | 대기 중    |
-| Task 003 | 인프라 기반 구축 (Supabase + 미들웨어)             | 대기 중    |
-| Task 004 | 공통 UI 컴포넌트 라이브러리                        | 대기 중    |
-| Task 005 | 레이아웃 시스템                                    | 대기 중    |
-| Task 006 | 공통 폼 시스템                                     | 대기 중    |
-| Task 007 | 데이터 접근 레이어 (Repository 패턴)               | 대기 중    |
-| Task 008 | 인증 서비스 레이어                                 | 대기 중    |
-| Task 009 | 노션 API 서비스 레이어                             | 대기 중    |
-| Task 010 | 견적서 서비스 레이어 및 공유 토큰 모듈             | 대기 중    |
-| Task 011 | 인증 페이지 기능 완성 (F010)                       | 대기 중    |
+| Task 001 | 디렉토리 구조 및 라우팅 설계                       | ✅ 완료    |
+| Task 002 | 공통 타입 시스템 정의                              | ✅ 완료    |
+| Task 003 | 인프라 기반 구축 (Supabase + 미들웨어)             | ✅ 완료    |
+| Task 004 | 공통 UI 컴포넌트 라이브러리                        | ✅ 완료    |
+| Task 005 | 레이아웃 시스템                                    | ✅ 완료    |
+| Task 006 | 공통 폼 시스템                                     | ✅ 완료    |
+| Task 007 | 데이터 접근 레이어 (Repository 패턴)               | ✅ 완료    |
+| Task 008 | 인증 서비스 레이어                                 | ✅ 완료    |
+| Task 009 | 노션 API 서비스 레이어                             | ✅ 완료    |
+| Task 010 | 견적서 서비스 레이어 및 공유 토큰 모듈             | ✅ 완료    |
+| Task 011 | 인증 페이지 기능 완성 (F010)                       | - 우선순위 |
 | Task 012 | 대시보드 기능 완성 (F006, F011)                    | 대기 중    |
 | Task 013 | 견적서 생성 기능 완성 (F001, F002)                 | 대기 중    |
 | Task 014 | 견적서 미리보기 및 공유 링크 기능 완성 (F003)      | 대기 중    |
