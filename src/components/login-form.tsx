@@ -1,10 +1,11 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
-import { EyeIcon, EyeOffIcon } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 
-import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import {
   Card,
   CardContent,
@@ -12,56 +13,26 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { FormErrorAlert } from '@/components/common/form/form-error-alert'
+import { FormFieldWrapper } from '@/components/common/form/form-field-wrapper'
+import { SubmitButton } from '@/components/common/form/submit-button'
+import { signInAction } from '@/lib/actions/auth.actions'
+import { loginSchema, type LoginSchema } from '@/lib/schemas/auth.schema'
+import { useFormAction } from '@/lib/hooks/use-form-action'
 
 export function LoginForm() {
-  const [showPassword, setShowPassword] = useState(false)
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    rememberMe: false,
-  })
-  const [errors, setErrors] = useState({
-    email: '',
-    password: '',
+  const router = useRouter()
+
+  const form = useForm<LoginSchema>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { email: '', password: '' },
   })
 
-  const validateForm = () => {
-    const newErrors = { email: '', password: '' }
-
-    if (!formData.email) {
-      newErrors.email = '이메일을 입력해 주세요.'
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = '올바른 이메일 주소를 입력해 주세요.'
-    }
-
-    if (!formData.password) {
-      newErrors.password = '비밀번호를 입력해 주세요.'
-    } else if (formData.password.length < 8) {
-      newErrors.password = '비밀번호는 최소 8자 이상이어야 합니다.'
-    }
-
-    setErrors(newErrors)
-    return !newErrors.email && !newErrors.password
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (validateForm()) {
-      console.log('로그인 데이터:', formData)
-      // 여기에 로그인 로직을 추가하세요
-    }
-  }
-
-  const handleInputChange = (field: string, value: string | boolean) => {
-    setFormData(prev => ({ ...prev, [field]: value }))
-    // 입력 시 에러 초기화
-    if (field === 'email' || field === 'password') {
-      setErrors(prev => ({ ...prev, [field]: '' }))
-    }
-  }
+  const { execute, isPending } = useFormAction({
+    action: signInAction,
+    form,
+    onSuccess: () => router.push('/dashboard'),
+  })
 
   return (
     <Card className="mx-auto w-full max-w-md">
@@ -72,73 +43,34 @@ export function LoginForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">이메일</Label>
+        <form onSubmit={form.handleSubmit(execute)} className="space-y-4">
+          <FormErrorAlert message={form.formState.errors.root?.message} />
+          <FormFieldWrapper
+            label="이메일"
+            error={form.formState.errors.email?.message}
+            required
+          >
             <Input
-              id="email"
               type="email"
               placeholder="your@email.com"
-              value={formData.email}
-              onChange={e => handleInputChange('email', e.target.value)}
-              className={errors.email ? 'border-red-500' : ''}
+              autoComplete="email"
+              {...form.register('email')}
             />
-            {errors.email && (
-              <p className="text-sm text-red-500">{errors.email}</p>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="password">비밀번호</Label>
-            <div className="relative">
-              <Input
-                id="password"
-                type={showPassword ? 'text' : 'password'}
-                placeholder="비밀번호를 입력하세요"
-                value={formData.password}
-                onChange={e => handleInputChange('password', e.target.value)}
-                className={errors.password ? 'border-red-500 pr-10' : 'pr-10'}
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? (
-                  <EyeOffIcon className="h-4 w-4" />
-                ) : (
-                  <EyeIcon className="h-4 w-4" />
-                )}
-              </Button>
-            </div>
-            {errors.password && (
-              <p className="text-sm text-red-500">{errors.password}</p>
-            )}
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="rememberMe"
-              checked={formData.rememberMe}
-              onCheckedChange={checked =>
-                handleInputChange('rememberMe', checked === true)
-              }
+          </FormFieldWrapper>
+          <FormFieldWrapper
+            label="비밀번호"
+            error={form.formState.errors.password?.message}
+            required
+          >
+            <Input
+              type="password"
+              placeholder="비밀번호를 입력하세요"
+              autoComplete="current-password"
+              {...form.register('password')}
             />
-            <Label
-              htmlFor="rememberMe"
-              className="cursor-pointer text-sm font-normal"
-            >
-              로그인 상태 유지
-            </Label>
-          </div>
-
-          <Button type="submit" className="w-full">
-            로그인하기
-          </Button>
+          </FormFieldWrapper>
+          <SubmitButton isPending={isPending}>로그인</SubmitButton>
         </form>
-
         <div className="mt-6 text-center">
           <p className="text-muted-foreground text-sm">
             아직 계정이 없으신가요?{' '}
