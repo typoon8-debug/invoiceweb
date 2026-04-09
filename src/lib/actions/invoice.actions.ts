@@ -5,6 +5,7 @@ import { InvoiceService } from '@/lib/services/invoice.service'
 import { invoiceCreateSchema } from '@/lib/schemas/invoice.schema'
 import type { ApiResult } from '@/types/api'
 import type { InvoiceWithItems, InvoiceWithStatus } from '@/types/domain'
+import type { InvoiceByTokenResult } from '@/lib/services/invoice.service'
 
 /**
  * 견적서 생성 Server Action
@@ -83,6 +84,24 @@ export async function getInvoiceByIdAction(
     const invoice = await InvoiceService.getInvoiceById(invoiceId, user.id)
     if (!invoice) return { success: false, error: '견적서를 찾을 수 없습니다' }
     return { success: true, data: invoice }
+  } catch (err) {
+    const message =
+      err instanceof Error ? err.message : '견적서 조회에 실패했습니다'
+    return { success: false, error: message }
+  }
+}
+
+/**
+ * 토큰으로 견적서 조회 Server Action (인증 불필요)
+ * 만료된 경우에도 데이터를 반환하여 뷰어에서 상태 기반 렌더링 가능
+ */
+export async function getInvoiceByTokenAction(
+  token: string
+): Promise<ApiResult<InvoiceByTokenResult>> {
+  try {
+    const result = await InvoiceService.getInvoiceByToken(token)
+    if (!result) return { success: false, error: '존재하지 않는 링크입니다' }
+    return { success: true, data: result }
   } catch (err) {
     const message =
       err instanceof Error ? err.message : '견적서 조회에 실패했습니다'
