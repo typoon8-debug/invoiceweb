@@ -1,3 +1,5 @@
+import { nanoid } from 'nanoid'
+
 import type { ShareLinkStatus } from '@/types/domain'
 
 /**
@@ -23,4 +25,30 @@ export function getLinkStatus(tokenExpiresAt: string | null): ShareLinkStatus {
   if (tokenExpiresAt === null) return 'invalid'
   if (new Date(tokenExpiresAt) < new Date()) return 'expired'
   return 'active'
+}
+
+/** 고유 공유 토큰 생성 (nanoid 21자) */
+export function generateToken(): string {
+  return nanoid(21)
+}
+
+/**
+ * 만료일 계산
+ * @param days 만료까지의 일수 (기본 30일)
+ * @returns ISO 8601 만료일시 문자열
+ */
+export function calculateExpiry(days: number = 30): string {
+  return new Date(Date.now() + days * 86_400_000).toISOString()
+}
+
+/**
+ * 토큰 유효성 검사
+ * @returns 'active' | 'expired' | 'invalid'
+ */
+export function validateToken(
+  token: string | null,
+  expiresAt: string | null
+): ShareLinkStatus {
+  if (!token) return 'invalid'
+  return getLinkStatus(expiresAt)
 }
