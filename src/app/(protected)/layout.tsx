@@ -1,11 +1,11 @@
 import { redirect } from 'next/navigation'
 
 import { createClient } from '@/lib/supabase/server'
+import { AuthenticatedLayout } from '@/components/layout/authenticated-layout'
 
 /**
- * 보호 라우트 레이아웃 — 서버 사이드 인증 검증
+ * 보호 라우트 레이아웃 — 서버 사이드 인증 검증 + 인증된 사용자 UI
  * 미들웨어 1차 체크 이후 이중 보안 레이어로 동작한다.
- * Phase 2에서 인증된 사용자용 레이아웃(헤더/네비게이션)으로 완성 예정.
  */
 export default async function ProtectedLayout({
   children,
@@ -21,5 +21,7 @@ export default async function ProtectedLayout({
     redirect('/login')
   }
 
-  return <>{children}</>
+  return (
+    <AuthenticatedLayout userEmail={user.email}>{children}</AuthenticatedLayout>
+  )
 }

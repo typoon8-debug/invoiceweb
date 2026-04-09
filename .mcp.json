@@ -22,9 +22,10 @@
       "command": "node",
       "args": ["../mcp-shrimp-task-manager/dist/index.js"],
       "env": {
-        "DATA_DIR": "./shrimp_data",
+        "DATA_DIR": "C:/Users/TomJay/workspaces/invoice-web/shrimp_data",
         "TEMPLATES_USE": "en",
-        "ENABLE_GUI": "true"
+        "ENABLE_GUI": "true",
+        "WEB_PORT": "3030"
       }
     }
   }
