@@ -1,3 +1,7 @@
+'use client'
+
+import { useRouter } from 'next/navigation'
+
 import {
   Card,
   CardContent,
@@ -11,10 +15,10 @@ import { cn } from '@/lib/utils'
 interface NotionConnectionCardProps {
   /** 노션 연결 여부 */
   isConnected: boolean
-  /** 연결하기 버튼 클릭 콜백 */
-  onConnect: () => void
-  /** 연결 해제 버튼 클릭 콜백 */
-  onDisconnect: () => void
+  /** 연결하기 Server Action */
+  onConnect: () => Promise<void>
+  /** 연결 해제 Server Action */
+  onDisconnect: () => Promise<unknown>
   className?: string
 }
 
@@ -25,6 +29,13 @@ export function NotionConnectionCard({
   onDisconnect,
   className,
 }: NotionConnectionCardProps) {
+  const router = useRouter()
+
+  async function handleDisconnect() {
+    await onDisconnect()
+    router.refresh()
+  }
+
   return (
     <Card className={cn(className)}>
       <CardHeader>
@@ -38,7 +49,6 @@ export function NotionConnectionCard({
           <div className="flex items-center gap-2">
             {isConnected ? (
               <>
-                {/* 연결됨 상태 — 초록 점 표시 */}
                 <span className="inline-block h-2 w-2 rounded-full bg-green-500" />
                 <span className="text-sm font-medium text-green-700">
                   노션 연결됨
@@ -46,7 +56,6 @@ export function NotionConnectionCard({
               </>
             ) : (
               <>
-                {/* 미연결 상태 — 회색 점 표시 */}
                 <span className="bg-muted-foreground inline-block h-2 w-2 rounded-full" />
                 <span className="text-muted-foreground text-sm">
                   노션 미연결
@@ -55,7 +64,7 @@ export function NotionConnectionCard({
             )}
           </div>
           {isConnected ? (
-            <Button variant="outline" size="sm" onClick={onDisconnect}>
+            <Button variant="outline" size="sm" onClick={handleDisconnect}>
               연결 해제
             </Button>
           ) : (

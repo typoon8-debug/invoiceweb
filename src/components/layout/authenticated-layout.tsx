@@ -1,7 +1,8 @@
 import Link from 'next/link'
-import { FileText, LayoutDashboard, LogOut, Plus } from 'lucide-react'
+import { FileText, LayoutDashboard, Plus } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
+import { LogoutButton } from '@/components/common/logout-button'
 
 interface AuthenticatedLayoutProps {
   children: React.ReactNode
@@ -55,15 +56,7 @@ export function AuthenticatedLayout({
                 {userEmail}
               </span>
             )}
-            {/* 로그아웃 버튼: Phase 3에서 signOutAction 연결 예정 */}
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex items-center gap-2"
-            >
-              <LogOut className="h-4 w-4" />
-              <span className="hidden sm:inline">로그아웃</span>
-            </Button>
+            <LogoutButton />
           </div>
         </div>
       </header>
