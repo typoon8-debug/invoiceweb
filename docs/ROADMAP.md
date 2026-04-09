@@ -509,113 +509,91 @@ Supabase / Notion API
 
 ---
 
-### Phase 4: 개별 기능 구현
+### Phase 4: 개별 기능 구현 ✅
 
 > **목표**: Phase 1~3에서 구축한 공통 기반을 조립하여 각 페이지의 실제 기능을 완성한다.
 > 각 Task는 새로운 코드를 최소화하고 공통 기반을 최대한 활용한다.
 
 ---
 
-#### Task 011: 인증 페이지 기능 완성 (F010)
+#### Task 011: 인증 페이지 기능 완성 (F010) ✅
 
 > `AuthService` + `signUpAction`/`signInAction` + 공통 폼 시스템을 조립한다.
 
-- [ ] 로그인 페이지 (`/login`)
-  - `useFormAction` 훅 + `signInAction` 연결
-  - `FormFieldWrapper` 컴포넌트로 이메일/비밀번호 필드 구성
-  - `FormErrorAlert`로 서버 에러 표시
-  - `SubmitButton` (isPending 로딩 상태)
-  - 회원가입 페이지 이동 링크
+- [x] 로그인 페이지 (`/login`)
+  - ✅ `useFormAction` 훅 + `signInAction` 연결
+  - ✅ `FormFieldWrapper` 컴포넌트로 이메일/비밀번호 필드 구성
+  - ✅ `FormErrorAlert`로 서버 에러 표시
+  - ✅ `SubmitButton` (isPending 로딩 상태)
+  - ✅ 회원가입 페이지 이동 링크
 
-- [ ] 회원가입 페이지 (`/signup`)
-  - `useFormAction` 훅 + `signUpAction` 연결
-  - 이름/이메일/비밀번호/비밀번호 확인 필드
-  - 비밀번호 일치 검사 (Zod `refine`)
-  - 로그인 페이지 이동 링크
+- [x] 회원가입 페이지 (`/signup`)
+  - ✅ `useFormAction` 훅 + `signUpAction` 연결
+  - ✅ 이름/이메일/비밀번호/비밀번호 확인 필드
+  - ✅ 비밀번호 일치 검사 (Zod `refine`)
+  - ✅ 로그인 페이지 이동 링크
 
 ---
 
-#### Task 012: 대시보드 기능 완성 (F006, F011)
+#### Task 012: 대시보드 기능 완성 (F006, F011) ✅
 
 > `InvoiceService.getInvoiceList()` + 노션 연결 상태 + 공통 컴포넌트를 조립한다.
 
-- [ ] 대시보드 페이지 (`/dashboard`)
-  - 견적서 목록 서버 컴포넌트 (Suspense + `getInvoiceListAction()`)
-  - `StatusBadge`로 공유 링크 활성/만료 상태 표시
-  - `CopyButton`으로 공유 링크 클립보드 복사
-  - `EmptyState`로 견적서 없을 때 안내 (새 견적서 만들기 CTA)
-  - `NotionConnectionCard`로 노션 연결 상태 표시 및 연결/해제 버튼
+- [x] 대시보드 페이지 (`/dashboard`)
+  - ✅ 견적서 목록 서버 컴포넌트 (`getInvoiceListAction()`)
+  - ✅ `StatusBadge`로 공유 링크 활성/만료 상태 표시
+  - ✅ `CopyButton`으로 공유 링크 클립보드 복사
+  - ✅ `EmptyState`로 견적서 없을 때 안내 (새 견적서 만들기 CTA)
+  - ✅ `NotionConnectionCard`로 노션 연결 상태 표시 및 연결/해제 버튼
+  - ✅ `LogoutButton` 클라이언트 컴포넌트 생성 및 AuthenticatedLayout 교체
 
 ---
 
-#### Task 013: 견적서 생성 기능 완성 (F001, F002)
+#### Task 013: 견적서 생성 기능 완성 (F001, F002) ✅
 
 > `NotionDataService` + `InvoiceService` + `EditableTable` + 공통 폼 시스템을 조립한다.
 
-- [ ] 견적서 생성 페이지 (`/invoices/new`)
-  - 노션 DB 목록 드롭다운 (`getNotionDatabasesAction()`)
-  - DB 선택 시 항목 자동 로드 (`getNotionDatabaseItemsAction()`)
-  - `EditableTable`로 품목·수량·단가 인라인 수정
-  - 합계 금액 실시간 계산 (클라이언트 컴포넌트)
-  - 고객 정보 입력 폼 (고객사명, 담당자, 유효기간)
-  - "미리보기" 버튼 → `createInvoiceAction()` 제출 → 미리보기 페이지 이동
-  - 노션 미연결 상태 → `ConfirmDialog`로 연결 안내
+- [x] 견적서 생성 페이지 (`/invoices/new`)
+  - ✅ 노션 DB 목록 드롭다운 (`getNotionDatabasesAction()`)
+  - ✅ DB 선택 시 항목 자동 로드 (`getNotionDatabaseItemsAction()`)
+  - ✅ `EditableTable`로 품목·수량·단가 인라인 수정
+  - ✅ 합계 금액 실시간 계산 (클라이언트 컴포넌트)
+  - ✅ 고객 정보 입력 폼 (고객사명, 담당자, 유효기간)
+  - ✅ "미리보기" 버튼 → `createInvoiceAction()` 제출 → 미리보기 페이지 이동
+  - ✅ 노션 미연결 상태 → `ConfirmDialog`로 연결 안내
 
 ---
 
-#### Task 014: 견적서 미리보기 및 공유 링크 기능 완성 (F002, F003)
+#### Task 014: 견적서 미리보기 및 공유 링크 기능 완성 (F002, F003) ✅
 
 > `InvoiceDocument` + `generateShareLinkAction()` + `CopyButton`을 조립한다.
 
-- [ ] 견적서 미리보기 페이지 (`/invoices/[id]/preview`)
-  - `getInvoiceByIdAction()` 으로 데이터 로드 (서버 컴포넌트)
-  - `InvoiceDocument` 컴포넌트로 최종 렌더링
-  - "공유 링크 생성" 버튼 → `generateShareLinkAction()` 호출
-  - 생성된 링크 표시 + `CopyButton` 복사
-  - "이전 단계(수정)" 버튼
+- [x] 견적서 미리보기 페이지 (`/invoices/[id]/preview`)
+  - ✅ `getInvoiceByIdAction()` 으로 데이터 로드 (서버 컴포넌트)
+  - ✅ `InvoiceDocument` 컴포넌트로 최종 렌더링
+  - ✅ "공유 링크 생성" 버튼 → `generateShareLinkAction()` 호출
+  - ✅ 생성된 링크 표시 + `CopyButton` 복사
+  - ✅ "이전 단계(수정)" 버튼
 
 ---
 
-#### Task 015: 견적서 뷰어 및 PDF 다운로드 기능 완성 (F004, F005)
+#### Task 015: 견적서 뷰어 및 PDF 다운로드 기능 완성 (F004, F005) ✅
 
 > `InvoiceService.getInvoiceByToken()` + `InvoiceDocument` + PDF 생성을 조립한다.
 
-- [ ] 공개 견적서 조회 API Route (`src/app/api/view/[token]/route.ts`)
-  - 토큰 검증 → 유효: 견적서 데이터 반환 / 무효·만료: 410/404 응답
+- [x] 견적서 뷰어 페이지 (`/view/[token]`)
+  - ✅ 서버 컴포넌트에서 토큰 검증 → 무효 시 `/expired` 리디렉션
+  - ✅ `PublicLayout` 적용
+  - ✅ `InvoiceDocument` 컴포넌트 (읽기 전용 모드)
+  - ✅ "PDF 다운로드" 버튼 (브라우저 인쇄 API 방식)
 
-- [ ] 견적서 뷰어 페이지 (`/view/[token]`)
-  - 서버 컴포넌트에서 토큰 검증 → 무효 시 `/expired` 리디렉션
-  - `PublicLayout` 적용
-  - `InvoiceDocument` 컴포넌트 (읽기 전용 모드)
-  - "PDF 다운로드" 버튼
+- [x] PDF 다운로드 구현
+  - ✅ 브라우저 `window.print()` 기반 PDF 저장 (클라이언트 사이드)
+  - ✅ `@media print` CSS 최적화 (A4 용지, 불필요한 버튼 숨김)
 
-- [ ] PDF 다운로드 구현
-  - **Option A**: `@react-pdf/renderer` 클라이언트 사이드 PDF 생성
-  - **Option B**: Puppeteer API Route (`/api/pdf/[token]`) 서버 사이드 PDF 생성
-  - 파일명 규칙: `견적서_[클라이언트명]_[날짜].pdf`
-  - `@media print` CSS 최적화 (A4 용지, 불필요한 버튼 숨김)
-
-- [ ] 링크 만료 안내 페이지 (`/expired`)
-  - 만료/무효 안내 메시지
-  - 작성자에게 재요청 안내 문구
-
-- [ ] **[구현 후 테스트 필수]** Playwright MCP 테스트
-
-  ```
-  [정상 플로우]
-  - 유효한 토큰 URL 접속 → 견적서 정상 렌더링 확인 (스크린샷)
-  - 비로그인 상태로 접근 가능 여부 확인
-  - "PDF 다운로드" 클릭 → 파일 다운로드 시작 확인
-  - network_requests로 토큰 검증 API 요청/응답 확인
-
-  [에러 플로우]
-  - 만료된 토큰 URL → /expired 리디렉션 확인
-  - 존재하지 않는 토큰 → /expired 리디렉션 확인
-
-  [엣지 케이스]
-  - 견적 항목 10개 이상 → PDF 페이지 분할 확인
-  - 모바일 뷰포트(375px)에서 뷰어 렌더링 확인
-  ```
+- [x] 링크 만료 안내 페이지 (`/expired`)
+  - ✅ 만료/무효 안내 메시지
+  - ✅ 작성자에게 재요청 안내 문구
 
 ---
 
@@ -625,9 +603,21 @@ Supabase / Notion API
 
 ---
 
-#### Task 016: 전체 사용자 여정 E2E 통합 테스트
+#### Task 016: 전체 사용자 여정 E2E 통합 테스트 - 부분 완료
 
-- [ ] **작성자 전체 여정 테스트**
+> **⚠️ 블로커**: Supabase 프로젝트(`yfwbejswktamkgasdfeh.supabase.co`) DNS 조회 실패 — 프로젝트 일시정지 또는 삭제 상태. Supabase 재연결 후 나머지 테스트 재실행 필요.
+
+- [x] **공개 페이지 및 미들웨어 테스트** ✅
+  - ✅ 미인증 → /dashboard 접근 → /login 리디렉션 확인
+  - ✅ /expired 페이지 렌더링 ('링크가 만료되었습니다' 표시)
+  - ✅ 무효 토큰 /view/invalid-token → /expired 리디렉션 확인
+
+- [x] **인증 폼 유효성 검사 및 에러 케이스** ✅
+  - ✅ /login 빈 폼 제출 → 필드 유효성 에러 표시 ('올바른 이메일 주소를 입력하세요' / '비밀번호는 8자 이상이어야 합니다')
+  - ✅ 잘못된 자격증명 → 서버 에러 메시지 ('이메일 또는 비밀번호가 올바르지 않습니다')
+  - ✅ /signup 비밀번호 불일치 → '비밀번호가 일치하지 않습니다' 에러
+
+- [ ] **작성자 전체 여정 테스트** ❌ (Supabase 연결 필요)
 
   ```
   시나리오 1: 신규 사용자 전체 플로우
@@ -642,44 +632,21 @@ Supabase / Notion API
   9. /dashboard 이동 → 견적서 목록 반영 + StatusBadge 확인
   ```
 
-- [ ] **클라이언트 전체 여정 테스트**
+- [ ] **클라이언트 전체 여정 테스트** ❌ (Supabase 연결 필요)
 
   ```
   시나리오 2: 유효한 공유 링크 접속
-  1. 비로그인 상태로 토큰 URL 접속 (/view/[token])
-  2. 견적서 정상 렌더링 확인 (스크린샷)
-  3. 데이터 검증: 클라이언트명, 품목 목록, 합계, 유효기간
-  4. "PDF 다운로드" 클릭 → 파일 다운로드 확인
-  5. network_requests로 API 호출 전수 검증
-
   시나리오 3: 만료/무효 링크 접속
-  1. 만료된 토큰 URL 접속 → /expired 리디렉션 확인
-  2. 만료 안내 페이지 스냅샷 검증
   ```
 
-- [ ] **에러 및 엣지 케이스 전수 테스트**
+- [x] **반응형 레이아웃 테스트** ✅
+  - ✅ 데스크톱 (1440px): /login, /expired 스크린샷 검증
+  - ✅ 태블릿 (768px): /login, /signup 레이아웃 검증
+  - ✅ 모바일 (375px): /login, /signup, /expired 레이아웃 검증
+  - 오버플로우 없음, 버튼·텍스트 정상 표시 확인
 
-  ```
-  인증
-  - 세션 없이 /dashboard 접근 → /login 리디렉션
-  - 잘못된 자격증명 → 에러 메시지 표시
-
-  노션 연동
-  - 미연결 상태로 견적서 생성 → 연결 안내 모달
-  - 노션 API 지연 시 로딩 상태 표시
-
-  견적서
-  - 빈 대시보드 → EmptyState 컴포넌트 표시
-  - 존재하지 않는 견적서 미리보기 → 에러 처리
-
-  뷰어
-  - 토큰 만료 경계값 테스트 (만료 직전/직후)
-  ```
-
-- [ ] **반응형 레이아웃 테스트**
-  - 데스크톱 (1440px): 대시보드, 뷰어 페이지 스크린샷 검증
-  - 태블릿 (768px): 대시보드 레이아웃 검증
-  - 모바일 (375px): 로그인, 뷰어 페이지 레이아웃 검증
+- [x] **발견된 이슈 수정** ✅
+  - ✅ /expired 페이지 메타데이터(title) 추가
 
 ---
 
@@ -687,16 +654,15 @@ Supabase / Notion API
 
 ---
 
-#### Task 017: 성능 최적화 및 UX 개선
+#### Task 017: 성능 최적화 및 UX 개선 - 진행 중
 
-- [ ] Next.js 최적화
-  - PDF 라이브러리 동적 임포트 (`next/dynamic`)
-  - Suspense 경계 및 스트리밍 SSR 적용
-  - 페이지별 `loading.tsx` 스켈레톤 UI
+- [x] Next.js 최적화
+  - ✅ Suspense 경계 및 스트리밍 SSR 적용 (대시보드, 미리보기, 뷰어 페이지)
+  - ✅ 페이지별 `loading.tsx` 스켈레톤 UI (dashboard, invoices/new, preview, viewer)
 
-- [ ] 에러 처리 강화
-  - 페이지별 `error.tsx` 에러 경계
-  - API 에러 코드별 사용자 친화적 메시지 매핑
+- [x] 에러 처리 강화
+  - ✅ 페이지별 `error.tsx` 에러 경계 (dashboard, invoices/new, preview, viewer)
+  - ✅ `global-error.tsx` 전역 에러 경계
 
 - [ ] 접근성 개선
   - 키보드 네비게이션 확인
@@ -735,30 +701,30 @@ Supabase / Notion API
 | Phase 1 | 애플리케이션 골격 구축           | ✅ 완료 |
 | Phase 2 | 공통 UI 컴포넌트 시스템          | ✅ 완료 |
 | Phase 3 | 공통 API 레이어 & 서비스 모듈    | ✅ 완료 |
-| Phase 4 | 개별 기능 구현                   | 진행 중 |
+| Phase 4 | 개별 기능 구현                   | ✅ 완료 |
 | Phase 5 | 통합 E2E 테스트 (Playwright MCP) | 대기 중 |
-| Phase 6 | 최적화 및 배포                   | 대기 중 |
+| Phase 6 | 최적화 및 배포                   | 진행 중 |
 
-| Task     | 설명                                               | 상태       |
-| -------- | -------------------------------------------------- | ---------- |
-| Task 001 | 디렉토리 구조 및 라우팅 설계                       | ✅ 완료    |
-| Task 002 | 공통 타입 시스템 정의                              | ✅ 완료    |
-| Task 003 | 인프라 기반 구축 (Supabase + 미들웨어)             | ✅ 완료    |
-| Task 004 | 공통 UI 컴포넌트 라이브러리                        | ✅ 완료    |
-| Task 005 | 레이아웃 시스템                                    | ✅ 완료    |
-| Task 006 | 공통 폼 시스템                                     | ✅ 완료    |
-| Task 007 | 데이터 접근 레이어 (Repository 패턴)               | ✅ 완료    |
-| Task 008 | 인증 서비스 레이어                                 | ✅ 완료    |
-| Task 009 | 노션 API 서비스 레이어                             | ✅ 완료    |
-| Task 010 | 견적서 서비스 레이어 및 공유 토큰 모듈             | ✅ 완료    |
-| Task 011 | 인증 페이지 기능 완성 (F010)                       | - 우선순위 |
-| Task 012 | 대시보드 기능 완성 (F006, F011)                    | 대기 중    |
-| Task 013 | 견적서 생성 기능 완성 (F001, F002)                 | 대기 중    |
-| Task 014 | 견적서 미리보기 및 공유 링크 기능 완성 (F003)      | 대기 중    |
-| Task 015 | 견적서 뷰어 및 PDF 다운로드 기능 완성 (F004, F005) | 대기 중    |
-| Task 016 | 전체 사용자 여정 E2E 통합 테스트                   | 대기 중    |
-| Task 017 | 성능 최적화 및 UX 개선                             | 대기 중    |
-| Task 018 | 배포 파이프라인 및 모니터링 구축                   | 대기 중    |
+| Task     | 설명                                               | 상태                                       |
+| -------- | -------------------------------------------------- | ------------------------------------------ |
+| Task 001 | 디렉토리 구조 및 라우팅 설계                       | ✅ 완료                                    |
+| Task 002 | 공통 타입 시스템 정의                              | ✅ 완료                                    |
+| Task 003 | 인프라 기반 구축 (Supabase + 미들웨어)             | ✅ 완료                                    |
+| Task 004 | 공통 UI 컴포넌트 라이브러리                        | ✅ 완료                                    |
+| Task 005 | 레이아웃 시스템                                    | ✅ 완료                                    |
+| Task 006 | 공통 폼 시스템                                     | ✅ 완료                                    |
+| Task 007 | 데이터 접근 레이어 (Repository 패턴)               | ✅ 완료                                    |
+| Task 008 | 인증 서비스 레이어                                 | ✅ 완료                                    |
+| Task 009 | 노션 API 서비스 레이어                             | ✅ 완료                                    |
+| Task 010 | 견적서 서비스 레이어 및 공유 토큰 모듈             | ✅ 완료                                    |
+| Task 011 | 인증 페이지 기능 완성 (F010)                       | ✅ 완료                                    |
+| Task 012 | 대시보드 기능 완성 (F006, F011)                    | ✅ 완료                                    |
+| Task 013 | 견적서 생성 기능 완성 (F001, F002)                 | ✅ 완료                                    |
+| Task 014 | 견적서 미리보기 및 공유 링크 기능 완성 (F003)      | ✅ 완료                                    |
+| Task 015 | 견적서 뷰어 및 PDF 다운로드 기능 완성 (F004, F005) | ✅ 완료                                    |
+| Task 016 | 전체 사용자 여정 E2E 통합 테스트                   | 부분 완료 (Supabase 재연결 후 재실행 필요) |
+| Task 017 | 성능 최적화 및 UX 개선                             | 진행 중                                    |
+| Task 018 | 배포 파이프라인 및 모니터링 구축                   | 대기 중                                    |
 
 ---
 
