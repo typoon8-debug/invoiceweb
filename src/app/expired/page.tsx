@@ -1,6 +1,12 @@
+import { Metadata } from 'next'
 import { LinkIcon } from 'lucide-react'
 
 import { PublicLayout } from '@/components/layout/public-layout'
+
+export const metadata: Metadata = {
+  title: '링크 만료',
+  description: '이 견적서 링크는 만료되었거나 유효하지 않습니다.',
+}
 
 export default function ExpiredPage() {
   return (

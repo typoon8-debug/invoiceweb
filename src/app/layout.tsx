@@ -15,9 +15,9 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'NextJS Starter - 모던 웹 스타터킷',
+  title: '노션 견적서 | 노션으로 견적서 만들기',
   description:
-    'Next.js 15, TypeScript, TailwindCSS, ShadcnUI로 구축된 프로덕션 준비가 완료된 웹 애플리케이션 스타터킷',
+    '노션 데이터베이스로 견적서를 생성하고 클라이언트와 웹 링크로 공유하세요. 별도 로그인 없이 견적서 확인 및 PDF 다운로드 지원.',
 }
 
 export default function RootLayout({

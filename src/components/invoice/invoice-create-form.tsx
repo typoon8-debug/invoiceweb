@@ -29,9 +29,11 @@ import { createInvoiceAction } from '@/lib/actions/invoice.actions'
 import {
   getNotionDatabasesAction,
   getNotionDatabaseItemsAction,
+  getNotionInvoiceListAction,
+  getNotionInvoiceItemsAction,
 } from '@/lib/actions/notion.actions'
 import type { InvoiceItem } from '@/types/domain'
-import type { NotionDatabase } from '@/lib/services/notion-data.service'
+import type { NotionDatabase, NotionInvoiceHeader } from '@/lib/notion'
 
 interface InvoiceCreateFormProps {
   /** 노션 연결 여부 — 서버에서 전달 */
@@ -46,8 +48,13 @@ export function InvoiceCreateForm({
   const [showNotionDialog, setShowNotionDialog] = useState(!isNotionConnected)
   const [databases, setDatabases] = useState<NotionDatabase[]>([])
   const [selectedDbId, setSelectedDbId] = useState('')
+  const [invoiceHeaders, setInvoiceHeaders] = useState<NotionInvoiceHeader[]>(
+    []
+  )
+  const [selectedInvoicePageId, setSelectedInvoicePageId] = useState('')
   const [items, setItems] = useState<InvoiceItem[]>([])
   const [isLoadingDbs, setIsLoadingDbs] = useState(false)
+  const [isLoadingInvoices, setIsLoadingInvoices] = useState(false)
   const [isLoadingItems, setIsLoadingItems] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
   const [isPending, setIsPending] = useState(false)
@@ -72,14 +79,59 @@ export function InvoiceCreateForm({
     })
   }, [isNotionConnected])
 
-  /** DB 선택 시 항목 자동 로드 */
+  /**
+   * DB 선택 시 Invoice 목록 로드 시도
+   * Invoice DB이면 → 견적서 목록 드롭다운 표시
+   * Items DB 등 다른 DB이면 → 기존 방식으로 항목 직접 로드
+   */
   async function handleDbSelect(dbId: string) {
     setSelectedDbId(dbId)
+    setSelectedInvoicePageId('')
+    setItems([])
+    setInvoiceHeaders([])
+
+    // Invoice DB 여부 판별: 견적서 헤더 목록 로드 시도
+    setIsLoadingInvoices(true)
+    const invoiceRes = await getNotionInvoiceListAction(dbId)
+    setIsLoadingInvoices(false)
+
+    if (invoiceRes.success && invoiceRes.data.length > 0) {
+      // Invoice DB → 견적서 목록 표시 (Step 2 드롭다운 활성화)
+      setInvoiceHeaders(invoiceRes.data)
+    } else {
+      // Invoice가 아닌 DB (Items DB 등) → 기존 방식으로 항목 직접 로드
+      setIsLoadingItems(true)
+      const itemsRes = await getNotionDatabaseItemsAction(dbId)
+      setIsLoadingItems(false)
+      if (itemsRes.success) {
+        const loaded = itemsRes.data.map((item, idx) => ({
+          ...item,
+          id: item.id || `notion-${idx}`,
+        }))
+        syncItems(loaded)
+      }
+    }
+  }
+
+  /**
+   * 견적서 선택 시 관련 Items 로드 + 고객 정보 자동 입력
+   * Invoice 페이지의 relation을 통해 연결된 Items를 가져옴
+   */
+  async function handleInvoiceSelect(pageId: string) {
+    setSelectedInvoicePageId(pageId)
+    const header = invoiceHeaders.find(h => h.notionPageId === pageId)
+
+    // Invoice 헤더에서 고객 정보 자동 입력
+    if (header) {
+      if (header.clientName) form.setValue('clientName', header.clientName)
+      if (header.dueDate) form.setValue('validUntil', header.dueDate)
+    }
+
+    // relation을 통해 연결된 Items 로드
     setIsLoadingItems(true)
-    const res = await getNotionDatabaseItemsAction(dbId)
+    const res = await getNotionInvoiceItemsAction(pageId)
     setIsLoadingItems(false)
     if (res.success) {
-      // Notion 항목 id가 빈 문자열인 경우 index 기반 임시 id 할당
       const loaded = res.data.map((item, idx) => ({
         ...item,
         id: item.id || `notion-${idx}`,
@@ -175,6 +227,34 @@ export function InvoiceCreateForm({
               </SelectContent>
             </Select>
           </div>
+
+          {/* 견적서 선택 드롭다운 (Invoice DB 선택 시에만 표시) */}
+          {invoiceHeaders.length > 0 && (
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-medium">견적서 선택</label>
+              <Select
+                value={selectedInvoicePageId}
+                onValueChange={handleInvoiceSelect}
+                disabled={isLoadingInvoices}
+              >
+                <SelectTrigger>
+                  <SelectValue
+                    placeholder={
+                      isLoadingInvoices ? '로딩 중...' : '견적서를 선택하세요'
+                    }
+                  />
+                </SelectTrigger>
+                <SelectContent>
+                  {invoiceHeaders.map(inv => (
+                    <SelectItem key={inv.notionPageId} value={inv.notionPageId}>
+                      {inv.invoiceNumber} - {inv.clientName}
+                      {inv.paymentStatus ? ` (${inv.paymentStatus})` : ''}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
 
           {/* 편집 가능 항목 테이블 */}
           {isLoadingItems ? (

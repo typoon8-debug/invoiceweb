@@ -7,86 +7,69 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import {
-  Zap,
-  Shield,
-  Palette,
-  Code,
-  Smartphone,
-  Globe,
-  Settings,
-  Users,
   Database,
+  FileText,
+  Link2,
+  Eye,
+  Download,
+  LayoutDashboard,
 } from 'lucide-react'
 
+// 서비스 핵심 기능 목록 — PRD 기능 명세(F001~F006) 기반
 const features = [
   {
-    icon: Zap,
-    title: '빠른 성능',
-    description:
-      'Next.js 15의 최적화된 빌드로 빠른 로딩 속도와 뛰어난 사용자 경험을 제공합니다.',
-  },
-  {
-    icon: Shield,
-    title: '타입 안정성',
-    description:
-      'TypeScript로 런타임 에러를 방지하고 개발 생산성을 크게 향상시킵니다.',
-  },
-  {
-    icon: Palette,
-    title: '아름다운 디자인',
-    description:
-      'ShadcnUI와 TailwindCSS로 구성된 모던하고 일관된 디자인 시스템을 제공합니다.',
-  },
-  {
-    icon: Code,
-    title: '개발자 경험',
-    description:
-      '최고의 DX를 위한 ESLint, Prettier, Husky 등 개발 도구가 미리 설정되어 있습니다.',
-  },
-  {
-    icon: Smartphone,
-    title: '반응형 디자인',
-    description:
-      'usehooks-ts를 활용한 완벽한 반응형 디자인으로 모든 디바이스에서 최적화됩니다.',
-  },
-  {
-    icon: Globe,
-    title: 'SEO 최적화',
-    description:
-      '검색 엔진 최적화와 메타데이터 관리가 기본으로 설정되어 있습니다.',
-  },
-  {
-    icon: Settings,
-    title: '확장 가능',
-    description:
-      '모듈화된 구조로 새로운 기능을 쉽게 추가하고 커스터마이징할 수 있습니다.',
-  },
-  {
-    icon: Users,
-    title: '프로덕션 준비',
-    description:
-      '실제 서비스 운영에 필요한 모든 설정과 보안 기능이 포함되어 있습니다.',
-  },
-  {
     icon: Database,
-    title: '상태 관리',
+    title: '노션 데이터 연동',
     description:
-      '검증된 라이브러리들을 활용한 효율적인 상태 관리 솔루션을 제공합니다.',
+      '연결된 노션 데이터베이스에서 품목·수량·단가를 자동으로 불러옵니다. 두 번 입력할 필요 없이 노션이 입력 도구가 됩니다.',
+  },
+  {
+    icon: FileText,
+    title: '견적서 자동 생성',
+    description:
+      '노션 항목과 고객 정보를 조합해 전문적인 견적서 문서를 자동으로 생성합니다. 수량·단가 인라인 수정도 지원합니다.',
+  },
+  {
+    icon: Link2,
+    title: '공유 링크 생성',
+    description:
+      '만료 기한이 있는 고유 토큰 URL을 생성합니다. 클라이언트는 별도 로그인 없이 링크만으로 견적서를 확인할 수 있습니다.',
+  },
+  {
+    icon: Eye,
+    title: '견적서 웹 뷰어',
+    description:
+      '클라이언트가 토큰 URL로 접속하면 깔끔한 웹 페이지로 견적서를 확인할 수 있습니다. 모바일에서도 최적화된 화면을 제공합니다.',
+  },
+  {
+    icon: Download,
+    title: 'PDF 다운로드',
+    description:
+      '뷰어 페이지에서 버튼 하나로 견적서를 PDF 파일로 저장합니다. 인쇄에 최적화된 레이아웃으로 전문적인 문서를 제공합니다.',
+  },
+  {
+    icon: LayoutDashboard,
+    title: '견적서 목록 관리',
+    description:
+      '발행한 견적서 목록을 한눈에 관리합니다. 공유 링크의 활성/만료 상태를 뱃지로 확인하고, 링크를 즉시 복사할 수 있습니다.',
   },
 ]
 
+// 기능 소개 섹션 — 서비스의 핵심 기능 6가지를 카드 그리드로 표시
 export function FeaturesSection() {
   return (
     <section className="bg-muted/50 py-20">
       <Container>
+        {/* 섹션 헤더 */}
         <div className="mb-16 text-center">
-          <h2 className="mb-4 text-3xl font-bold">주요 기능</h2>
+          <h2 className="mb-4 text-3xl font-bold">핵심 기능</h2>
           <p className="text-muted-foreground mx-auto max-w-2xl">
-            프로덕션 준비가 완료된 강력한 기능들로 빠르고 안정적인 웹
-            애플리케이션을 구축하세요.
+            노션에서 시작해 클라이언트 전달까지, 견적서 워크플로우 전체를
+            지원합니다.
           </p>
         </div>
 
+        {/* 기능 카드 그리드 — 모바일 1열 / 태블릿 2열 / 데스크톱 3열 */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {features.map(feature => (
             <Card
